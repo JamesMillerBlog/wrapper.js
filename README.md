@@ -1,2 +1,2 @@
-![wrapper-logo](https://user-images.githubusercontent.com/12833533/147892256-92ca92c7-f62b-460a-8c9a-e48b4b73c13c.png)
+![wrapperjs](https://user-images.githubusercontent.com/12833533/147892308-652f6dd6-6576-48ec-bbc1-5db8714b7727.png)
 # wrapper.js
