@@ -5,29 +5,35 @@ const utils = require('./utils.js'),
 module.exports = {
 
     // **************************
+    //       GENERATE ENV
+    // **************************
+    
+    generateEnv: (deploymentData) => {
+        try {
+            fs.writeFileSync('./devops/terraform/terraform.tfvars.json', utils.prepData(deploymentData, "tf"));
+            console.log('Terraform ENV file updated');
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+    // **************************
     //       INIT TERRAFORM
     // **************************
 
     init: (deploymentData) => {
-        const { terraform_state_s3_bucket, terraform_sls_next_region } = deploymentData;
-
-        fs.writeFile('./devops/terraform/terraform.tfvars.json', utils.prepData(deploymentData, "terraform"), (err) => {
-            if (err) throw err;
-            console.log('TF VARS file updated');
-
-            utils.runSyncTerminalCommand(
-                `cd ./devops/terraform && terraform init -backend-config "bucket=${terraform_state_s3_bucket}" -backend-config "region=${terraform_sls_next_region}" -backend-config "key=terraform.tfstate" -reconfigure`
-            );
-        });
+        const { state_s3_bucket, region } = deploymentData;
+        utils.runSyncTerminalCommand(
+            `cd ./devops/terraform && terraform init -backend-config "bucket=${state_s3_bucket}" -backend-config "region=${region}" -backend-config "key=terraform.tfstate" -reconfigure`
+        );
+        
     },
 
     // **************************
     //      PLAN ENVIRONMENT
     // **************************
 
-    plan: (deploymentData) => {
-        module.exports.init(deploymentData);
-
+    plan: () => {
         utils.runAsyncTerminalCommand(
             `cd ./devops/terraform && terraform plan -var-file="terraform.tfvars.json"`
         );
@@ -37,9 +43,7 @@ module.exports = {
     // CREATE / UPDATE ENVIRONMENT
     // ***************************
 
-    apply: (deploymentData) => {
-        module.exports.init(deploymentData);
-            
+    apply: () => {            
         utils.runAsyncTerminalCommand(
             `cd ./devops/terraform && terraform apply -var-file="terraform.tfvars.json" -auto-approve`
         );
@@ -51,10 +55,10 @@ module.exports = {
 
     destroy: (deploymentData) => {
 
-        const { terraform_sls_next_domain_name } = deploymentData;
+        const { domain_name } = deploymentData;
 
         utils.runSyncTerminalCommand(
-            `aws s3 rm s3://${terraform_sls_next_domain_name} --recursive`
+            `aws s3 rm s3://${domain_name} --recursive`
         );
 
         utils.runAsyncTerminalCommand(

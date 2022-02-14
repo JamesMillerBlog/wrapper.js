@@ -54,10 +54,10 @@ resource "aws_cloudfront_distribution" "this" {
             }
         }
 
-        lambda_function_association {
-            event_type = "viewer-request"
-            lambda_arn = var.lambda_edge_qualified_arn
-        }
+        # lambda_function_association {
+        #     event_type = "origin-request"
+        #     lambda_arn = var.lambda_edge_qualified_arn
+        # }
 
     }
 
@@ -78,8 +78,42 @@ resource "aws_cloudfront_distribution" "this" {
         ssl_support_method  = "sni-only"
     }
 
-    # depends_on = [var.s3_website_endpoint, var.acm_cert_id]
+    depends_on = [var.s3_website_endpoint, var.acm_cert_id]
     # depends_on = [var.s3_website_endpoint, var.lambda_edge_qualified_arn]
-    depends_on = [var.s3_website_endpoint, var.lambda_edge_qualified_arn, var.acm_cert_id]
+    # depends_on = [var.s3_website_endpoint, var.lambda_edge_qualified_arn, var.acm_cert_id]
     # depends_on = [var.s3_website_endpoint]
 }
+
+# resource "aws_cloudfront_function" "rewrite_uri" {
+# 	name    = "rewrite-request-${random_id.id.hex}"
+# 	runtime = "cloudfront-js-1.0"
+# 	code    = <<EOF
+# function handler(event) {
+# 	var request = event.request;
+# 	request.uri = request.uri.replace(/^\/[^/]*\//, "/");
+# 	return request;
+
+#     // Extract the request from the CloudFront event that is sent to Lambda@Edge 
+#     var request = event.Records[0].cf.request;
+#     // Extract the URI from the request
+#     var olduri = request.uri;
+#     // Replace the received URI with the URI that includes the index page
+#     request.uri = updateUri(olduri);
+#     // Return to CloudFront
+#     return callback(null, request);
+#     };
+
+#     function updateUri(olduri) {
+#     // if url ends with file name all it to pass through to site
+#     if (olduri.match(/\.[0-9a-z]+$/i)) {
+#         return olduri;
+#     }
+#     // else (if it ends with "/" folder path) then add "/index.html"
+#     else if (olduri.endsWith('/')) {
+#         return `${olduri}index.html`;
+#     }
+#     // else return the previous url with "/index.html ad"
+#     return `${olduri}/index.html`;
+# }
+# EOF
+# }

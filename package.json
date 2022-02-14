@@ -1,22 +1,30 @@
 {
-  "name": "arena",
+  "name": "wrapper-js",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js terraformApply",
+    "generateTfEnvVars": "node index.js generateTfEnvVars",
+    "generateEnvVars": "node index.js generateEnvVars",
     "terraformInit": "node index.js terraformInit",
     "terraformPlan": "node index.js terraformPlan",
     "terraformApply": "node index.js terraformApply",
     "deployApp": "node index.js deployApp",
     "destroyEnv": "node index.js destroyEnv",
-    "deployBackend": "node index.js deployBackend",
-    "removeBackend": "node index.js removeBackend"
+    "ethDeploy": "node index.js ethDeploy",
+    "slsDeploy": "node index.js slsDeploy",
+    "slsRemove": "node index.js slsRemove",
+    "dev": "node index.js dev",
+    "installAll": "node index.js installAll"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.834.0",
+    "aws-sdk": "^2.1000.0",
+    "dotenv": "^10.0.0",
+    "fs": "^0.0.1-security",
+    "internal-ip": "^6.2.0",
     "node-cmd": "^4.0.0"
   }
 }

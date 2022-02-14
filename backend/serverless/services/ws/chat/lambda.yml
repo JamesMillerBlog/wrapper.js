@@ -1,0 +1,5 @@
+chat-socket:
+  handler: chat/index.handler
+  events:
+    - websocket:
+        route: chat

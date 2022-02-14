@@ -1,12 +1,14 @@
 const cmd = require('node-cmd'),
     AWS = require('aws-sdk'),
-    fs = require('fs');
+    fs = require('fs'),
+    internalIp = require('internal-ip');
+;
 
 // **************************
 //      HELPER FUNCTIONS
 // **************************
 
-module.exports ={
+module.exports = {
     
     // Function to run syncronous terminal commands
     runSyncTerminalCommand: (terminalCommand) => {
@@ -61,23 +63,27 @@ module.exports ={
         for (var property in deploymentData) {
             if(property.includes(framework)) {
                 data[property] = deploymentData[property];
-                let newKey = property.replace(/terraform_|sls_|next_/ig, '');
+                let newKey = property.replace(/tf_|sls_|eth_|next_/ig, '');
                 data[newKey] = deploymentData[property];
                 delete data[property];
             }
         }
-
+        if(framework == "next" || framework == "sls") {
+            data['api_local_ip_address'] = internalIp.v4.sync();
+            data['local_api_rest_port'] = '4000';
+            data['local_api_ws_port'] = '4500';
+        }
+        if(framework == "eth") {
+            data['local_ip_address'] = internalIp.v4.sync();
+            data['localhost_network_id'] = '5777';
+        }
         if(framework === "next") {
             data = 
-`const withTM = require('next-transpile-modules')(['@react-three/drei', 'three'])
-
-const withPlugins = require('next-compose-plugins');
-
-module.exports = withPlugins([withTM], {env: ${JSON.stringify(data,null,2)}});`;
+            `module.exports = {exportTrailingSlash: true,env: ${JSON.stringify(data,null,2)}};`;
         } else {
             data = JSON.stringify(data, null, 2);
         }
-
+        
         return data;
     },
 
@@ -95,7 +101,6 @@ module.exports = withPlugins([withTM], {env: ${JSON.stringify(data,null,2)}});`;
                     return parsedSecret;
                 }
                 const binarySecretData = data.SecretBinary;
-                // console.log(binarySecretData);
                 return binarySecretData;
             }
         } catch (error) {
@@ -103,34 +108,37 @@ module.exports = withPlugins([withTM], {env: ${JSON.stringify(data,null,2)}});`;
             console.log(error);
         }
     },
-    getSSM: async (deploymentData) => {   
-        const { ssm } = deploymentData;
-        const rawSsmParams = ssm.split(",");
-        let formattedParams = [], loadedSsmValues = {}, paramNames = [];
-        
-        for (let x = 0; x < rawSsmParams.length; x++) {
-            if (!rawSsmParams[x].includes(' ')) {
-                formattedParams[x] = rawSsmParams[x];
-            } else {
-                formattedParams[x] = rawSsmParams[x].replace(/ /ig, '');
-            }
-            
-            paramNames[x] = formattedParams[x].split('param_')[1];
-            loadedSsmValues[paramNames[x]] = await module.exports.retrieveSSM(formattedParams[x]);
-        }
-        return loadedSsmValues;
-    }, 
-    retrieveSSM: async (secretName) => {
-        const ssm = new AWS.SSM();       
+    
+    dev: () => {
+        module.exports.runAsyncTerminalCommand(
+            `cd ./backend && npm install && npm run dev`
+        );
+        module.exports.runAsyncTerminalCommand(
+            `cd ./frontend && npm install && npm run dev`
+        );
+    },
 
-        console.log(`Getting secret for ${secretName}`);
-        const params = {
-            Name: secretName,
-            WithDecryption: true
-        };
+    install: () => {
+        module.exports.runAsyncTerminalCommand(
+            `npm install`
+        );
+        module.exports.runAsyncTerminalCommand(
+            `cd ./backend/serverless && npm install`
+        );
+        module.exports.runAsyncTerminalCommand(
+            `cd ./backend/ethereum && npm install`
+        );
+        module.exports.runAsyncTerminalCommand(
+            `cd ./frontend && npm install`
+        );
+    },
 
-        const result = await ssm.getParameter(params).promise();
-        // console.log(result.Parameter.Value);
-        return result.Parameter.Value;
-    } 
+    awsAccessSetup: (awsCredentials) => {
+        const { region, access_key_id, secret_access_key } = awsCredentials;
+        module.exports.runSyncTerminalCommand(`
+            export AWS_REGION=${region} && 
+            export AWS_ACCESS_KEY_ID=${access_key_id} && 
+            export AWS_SECRET_ACCESS_KEY=${secret_access_key}
+        `)
+    }
 };

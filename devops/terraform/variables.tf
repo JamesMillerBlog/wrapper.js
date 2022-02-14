@@ -34,26 +34,14 @@ variable "state_s3_bucket" {
   default = ""
 }
 
-variable "auth_username" {
-  description = "Username to access website"
+variable "chain_network_id" {
+  description = "The network id of the private eth blockchain"
   type        = string
-  default     = null
+  default = ""
 }
 
-variable "auth_password" {
-  description = "Password to access website"
-  type        = string
-  default     = null
-}
-
-variable "lex_instance_name" {
-  description = "Instance name for Lex Chatbot"
-  type        = string
-  default     = null
-}
-
-variable "lex_alias_name" {
-  description = "Alias name for Lex Chatbot"
+variable "chain_account_password" {
+  description = "Account password required for the coin base account on eth blockchain"
   type        = string
   default     = null
 }

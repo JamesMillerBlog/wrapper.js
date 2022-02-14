@@ -1,0 +1,33 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build && next export",
+    "start": "next start"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-amplify/ui-react": "^1.2.19",
+    "aws-amplify": "^4.3.1",
+    "axios": "^0.21.4",
+    "ethers": "^5.5.4",
+    "js-beautify": "^1.14.0",
+    "mixpanel-browser": "^2.43.0",
+    "next": "^11.1.2",
+    "next-compose-plugins": "^2.2.1",
+    "next-transpile-modules": "^8.0.0",
+    "postprocessing": "^1.1.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-use-websocket": "^2.9.1",
+    "sockette": "^2.0.6",
+    "styled-components": "^5.3.1",
+    "twilio-chat": "^5.0.2",
+    "wscat": "^5.0.0",
+    "zustand": "^3.5.11"
+  }
+}

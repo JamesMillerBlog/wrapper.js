@@ -9,3 +9,9 @@ variable "domain_name" {
   type        = string
   default     = null
 }
+
+variable "region" {
+  description = "Region"
+  type        = string
+  default     = null
+}

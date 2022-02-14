@@ -34,8 +34,8 @@ variable "default_root_object" {
   default     = ""
 }
 
-variable "lambda_edge_qualified_arn" {
-  description = "Arn of Edge Lambda"
-  type        = string
-  default     = ""
-}
+# variable "lambda_edge_qualified_arn" {
+#   description = "Arn of Edge Lambda"
+#   type        = string
+#   default     = ""
+# }
