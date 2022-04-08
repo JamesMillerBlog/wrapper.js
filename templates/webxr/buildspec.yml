@@ -1,0 +1,57 @@
+image:
+  name: yourDockerHub/client-project-bitbucket-pipeline:latest
+  username: $DOCKER_HUB_USERNAME
+  password: $DOCKER_HUB_PASSWORD
+  email: $DOCKER_HUB_EMAIL
+
+definitions:
+  steps:
+    - step: &build-and-deploy-app
+        name: Build and Deploy NextJS app
+        script:
+            - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            - export AWS_REGION=$AWS_REGION
+            - npm install
+            - npm run generateEnvVars --client=$client --project=$project --environment=$environment
+            - npm run deployApp
+    - step: &deploy_backend
+        name: Deploy Serverless
+        script:
+            - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            - export AWS_REGION=$AWS_REGION
+            - npm install
+            - npm run generateEnvVars --client=$client --project=$project --environment=$environment
+            - npm run slsDeploy
+
+pipelines:
+  branches:
+    dev:
+    - step:
+        <<: *build-and-deploy-app
+        deployment: Dev App
+    - step:
+        <<: *deploy_backend
+        deployment: Dev Backend
+    test:
+    - step:
+        <<: *build-and-deploy-app
+        deployment: Test App
+    - step:
+        <<: *deploy_backend
+        deployment: Test Backend
+    stage:
+    - step:
+        <<: *build-and-deploy-app
+        deployment: Stage App
+    - step:
+        <<: *deploy_backend
+        deployment: Stage Backend
+    prod:
+    - step:
+        <<: *build-and-deploy-app
+        deployment: Prod App
+    - step:
+        <<: *deploy_backend
+        deployment: Prod Backend

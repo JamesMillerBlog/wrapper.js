@@ -1,13 +1,13 @@
 {
-  "name": "wrapper",
+  "name": "@jamesmillerblog/wrapper.js",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Web3 Full Stack Javascript Based Devops Tool",
+  "author": "James Miller <hi@jamesmiller.blog> (https://jamesmiller.blog)",
   "main": "./bin/index.js",
   "scripts": {
     "dev": "gobble dev",
     "deployBackend": "gobble sls deploy" 
   },
-  "author": "",
   "license": "ISC",
   "dependencies": {
     "arg": "^5.0.1",
