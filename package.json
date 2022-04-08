@@ -1,30 +1,31 @@
 {
-  "name": "wrapper-js",
+  "name": "wrapper",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./bin/index.js",
   "scripts": {
-    "start": "node index.js terraformApply",
-    "generateTfEnvVars": "node index.js generateTfEnvVars",
-    "generateEnvVars": "node index.js generateEnvVars",
-    "terraformInit": "node index.js terraformInit",
-    "terraformPlan": "node index.js terraformPlan",
-    "terraformApply": "node index.js terraformApply",
-    "deployApp": "node index.js deployApp",
-    "destroyEnv": "node index.js destroyEnv",
-    "ethDeploy": "node index.js ethDeploy",
-    "slsDeploy": "node index.js slsDeploy",
-    "slsRemove": "node index.js slsRemove",
-    "dev": "node index.js dev",
-    "installAll": "node index.js installAll"
+    "dev": "gobble dev",
+    "deployBackend": "gobble sls deploy" 
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "arg": "^5.0.1",
     "aws-sdk": "^2.1000.0",
+    "chalk": "^2.0.0",
     "dotenv": "^10.0.0",
+    "esm": "^3.2.25",
+    "execa": "^6.1.0",
     "fs": "^0.0.1-security",
+    "inquirer": "^8.2.1",
     "internal-ip": "^6.2.0",
-    "node-cmd": "^4.0.0"
+    "listr": "^0.14.3",
+    "ncp": "^2.0.0",
+    "node-cmd": "^4.0.0",
+    "pkg-install": "^1.0.0"
+  },
+  "bin": {
+    "unwrap": "./src/index.js",
+    "gobble": "./bin/index.js"
   }
 }
