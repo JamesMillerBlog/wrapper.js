@@ -51,7 +51,7 @@ const data = async(cognito) => {
       uid: username,
       role: role,
       username: username,
-      image: 'dford.jpg'
+      image: 'jamesmiller.png'
     },
     TableName: users_table_id
   };

@@ -7,7 +7,7 @@ const Avatar = (props) => {
     const { position, rotation, image } = props;
     const avatarMesh = useRef();
     let setImage;
-    if(image == undefined) setImage = 'dford.jpg';
+    if(image == undefined) setImage ='jamesmiller.png';
     else setImage = image;
     const texture = useLoader(THREE.TextureLoader, `/images/${setImage}`)
 
