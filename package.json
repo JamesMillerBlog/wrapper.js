@@ -10,10 +10,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jamesmillerblog/wrapper.js.git"
+    "url": "https://github.com/jamesmillerblog/wrapper.js"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://npm.pkg.github.com/jamesmillerblog"
   },
   "license": "ISC",
   "dependencies": {
