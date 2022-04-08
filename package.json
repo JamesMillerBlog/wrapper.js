@@ -1,6 +1,6 @@
 {
   "name": "@jamesmillerblog/wrapper.js",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A Web3 Full Stack Javascript Based Devops Tool",
   "author": "James Miller <hi@jamesmiller.blog> (https://jamesmiller.blog)",
   "main": "./bin/index.js",
