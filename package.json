@@ -8,6 +8,13 @@
     "dev": "gobble dev",
     "deployBackend": "gobble sls deploy" 
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jamesmillerblog/wrapper.js.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "license": "ISC",
   "dependencies": {
     "arg": "^5.0.1",
