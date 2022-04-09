@@ -9,7 +9,7 @@
   <a aria-label="James Miller Blog logo" href="https://vercel.com">
       <span style="background-image: src(http://jamesmiller.blog/wp-content/uploads/2020/01/cropped-cropped-apple-touch-icon-1.png); background-color:black; height:25;"></div>
   </a>
-  <a aria-label="NPM version" href="https://www.npmjs.com/package/next">
+  <a aria-label="NPM version" href="https://github.com/JamesMillerBlog/wrapper.js/packages/1356252">
     <img alt="" src="https://img.shields.io/npm/v/next.svg?style=for-the-badge&labelColor=000000">
   </a>
   <a aria-label="License" href="https://github.com/vercel/next.js/blob/canary/license.md">
