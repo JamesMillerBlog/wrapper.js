@@ -7,9 +7,9 @@
 
 <p align="center">
   <a aria-label="James Miller Blog logo" href="https://vercel.com">
-    <div height='30' style="background-color:black;">
+    <span height='30' style="background-color:black;">
       <img src="https://i0.wp.com/jamesmiller.blog/wp-content/uploads/2020/01/cropped-apple-touch-icon-1.png?w=180&ssl=1" height="25">
-    </div>
+    </span>
   </a>
   <a aria-label="NPM version" href="https://www.npmjs.com/package/next">
     <img alt="" src="https://img.shields.io/npm/v/next.svg?style=for-the-badge&labelColor=000000">
