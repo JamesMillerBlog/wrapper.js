@@ -1,0 +1,15 @@
+{
+    "name": "webxr",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "gobble dev",
+        "deployBackend": "gobble sls deploy"
+    },
+    "author": "James Miller",
+    "license": "ISC",
+    "dependencies": {
+        "@jamesmillerblog/wrapper.js": "github:jamesmillerblog/wrapper.js"
+    }
+}

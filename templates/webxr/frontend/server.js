@@ -12,8 +12,8 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const httpsOptions = {
-  key: readFileSync('./../.wrapper/cert/key.pem'),
-  cert: readFileSync('./../.wrapper/cert/cert.pem')
+  key: readFileSync('./cert/key.pem'),
+  cert: readFileSync('./cert/cert.pem')
 };
 
 
