@@ -1,6 +1,0 @@
-# edit these fields with your AWS details
-# remove 'example-' from this file's name so its called '.env'
-# remove the 3 comments at the top of this file
-AWS_REGION=eu-west-2
-AWS_ACCESS_KEY_ID=ABCDEFGHIJKLMNOPQRSTUVWXYZ
-AWS_SECRET_ACCESS_KEY=0123456789

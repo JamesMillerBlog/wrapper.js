@@ -27,6 +27,14 @@ async function copyTemplateFiles(options) {
 //     return;
 // }
 
+const createEnvFile = async(options) => {
+  if(options.envFile.includes("Yes - I would like Wrapper.js to create the `.env`")) {
+    fs.writeFileSync(`${options.targetDirectory}/.env`, `AWS_REGION=${options.awsCredentials.region}\nAWS_ACCESS_KEY_ID=${options.awsCredentials.accessKeyId}\nAWS_SECRET_ACCESS_KEY=${options.awsCredentials.secretAccessKey}`);
+  } else {
+    fs.writeFileSync(`${options.targetDirectory}/.env`, `# edit these fields with your AWS details\n# remove 'example-' from this file's name so its called '.env'\n# remove the 3 comments at the top of this file\nAWS_REGION=eu-west-2\nAWS_ACCESS_KEY_ID=ABCDEFGHIJKLMNOPQRSTUVWXYZ\nAWS_SECRET_ACCESS_KEY=0123456789`);
+  }
+}
+
 export async function createProject(options) {
     options = {
         ...options,
@@ -54,11 +62,11 @@ export async function createProject(options) {
           title: 'Copy project files',
           task: () => copyTemplateFiles(options),
         },
-        // {
-        //   title: 'Initialize git',
-        //   task: () => initGit(options),
-        //   enabled: () => options.git,
-        // },
+        {
+          title: 'Create .env file',
+          task: () => createEnvFile(options),
+          enabled: () => options.envFile,
+        },
         {
           title: 'Install dependencies',
           task: () =>
@@ -76,7 +84,10 @@ export async function createProject(options) {
 
     console.log('Copy project files');
     await copyTemplateFiles(options);
-
+    if(options.envFile) {
+      console.log('Create env files');
+      await createEnvFile(options);
+    }
     console.log('%s Project ready', chalk.green.bold('DONE'));
     return true;
 }
@@ -92,3 +103,7 @@ export async function createProject(options) {
 //     const url = callerFrame.match(/http.*\.js/)[0];
 //     return url;
 // }
+
+/* 
+Next create secret: https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/create-secret.html
+*/
