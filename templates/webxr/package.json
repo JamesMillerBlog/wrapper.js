@@ -8,8 +8,5 @@
         "deployBackend": "gobble sls deploy"
     },
     "author": "James Miller",
-    "license": "ISC",
-    "dependencies": {
-        "@jamesmillerblog/wrapper.js": "github:jamesmillerblog/wrapper.js"
-    }
+    "license": "ISC"
 }

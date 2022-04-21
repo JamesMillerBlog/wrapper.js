@@ -188,7 +188,6 @@ module.exports = {
     runAsyncTerminalCommand: async (terminalCommand) => {
 
         let command = cmd.run(terminalCommand, function (err, data, stderr) {
-            console.log("Started running a command");
             // console.log(`Start ${action} a ${environment} app for the ${project} project on behalf of ${client}...`);
             if (err) {
                 console.log(err);
@@ -203,11 +202,6 @@ module.exports = {
         // stream terminal output
         command.stdout.on('data', function (data) {
             console.log(data);
-        });
-
-        command.stdout.on('close', function (data) {
-            console.log("Finished running command");
-            // console.log(`Finished ${action} a ${environment} app for the ${project} project on behalf of ${client}...`);
         });
 
         await command;

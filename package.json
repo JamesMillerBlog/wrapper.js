@@ -28,8 +28,7 @@
     "internal-ip": "^6.2.0",
     "listr": "^0.14.3",
     "ncp": "^2.0.0",
-    "node-cmd": "^4.0.0",
-    "pkg-install": "^1.0.0"
+    "node-cmd": "^4.0.0"
   },
   "bin": {
     "unwrap": "./src/index.js",
