@@ -25,7 +25,6 @@
     "react-use-websocket": "^3.0.0",
     "styled-components": "^5.3.3",
     "three": "^0.137.5",
-    "vadr-three-vr": "^1.0.3"
   },
   "devDependencies": {
     "eslint": "8.9.0",

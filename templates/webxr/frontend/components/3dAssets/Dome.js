@@ -2,7 +2,6 @@ import React, { useRef, forwardRef, useState, useEffect, Suspense, lazy } from '
 import { useLoader, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from "three";
 import withCollaboration from './withCollaboration';
-import withAnalytics from './withAnalytics';
 
 const Model = forwardRef((props, group) => {
     const { image, name } = props;
@@ -22,8 +21,7 @@ const Model = forwardRef((props, group) => {
       </mesh>
     )
 });
-const EnhancedModel = withCollaboration(Model);
-const Dome = withAnalytics(EnhancedModel);
+const Dome = withCollaboration(Model);
 
 export default Dome;
 

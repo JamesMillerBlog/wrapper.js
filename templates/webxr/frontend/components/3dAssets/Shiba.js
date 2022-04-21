@@ -9,7 +9,6 @@ title: Shiba
 import React, { useRef, forwardRef, useEffect } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import withCollaboration from './withCollaboration';
-import withAnalytics from './withAnalytics';
 import withXrInteractivity from './withXrInteractivity';
 
 const Model = forwardRef((props, group) => {
@@ -38,7 +37,6 @@ useGLTF.preload('/shiba/scene.gltf')
 
 
 const InteractiveModel = withXrInteractivity(Model);
-const CollaborativeModel = withCollaboration(InteractiveModel);
-const Shiba = withAnalytics(CollaborativeModel);
+const Shiba = withCollaboration(InteractiveModel);
 
 export default Shiba;

@@ -2,7 +2,6 @@ import React, { useRef, forwardRef, useState, useEffect, Suspense, lazy } from '
 import { useLoader, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from "three";
 import withCollaboration from './withCollaboration';
-import withAnalytics from './withAnalytics';
 import withXrInteractivity from './withXrInteractivity';
 
 const Model = forwardRef((props, group) => {
@@ -20,7 +19,6 @@ const Model = forwardRef((props, group) => {
 })
 
 const InteractiveModel = withXrInteractivity(Model);
-const CollaborativeModel = withCollaboration(InteractiveModel);
-const Slide = withAnalytics(CollaborativeModel);
+const Slide = withCollaboration(InteractiveModel);
 
 export default Slide;
