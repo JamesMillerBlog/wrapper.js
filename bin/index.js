@@ -52,7 +52,7 @@ const utils = require('./scripts/utils.js'),
                         ethereum.generateEnv(manuallyCreatedSecrets, terraformGeneratedSecrets);
                     } else {
                         console.log('Only generated terraform variables as terraform has not yet been run.');
-                        console.log('Run terraform commands to generate terraform secrests, that can be used to generate front end and backend variables.');
+                        console.log('Run terraform commands to generate terraform secrets, that can be used to generate front end and backend variables.');
                         console.log('Once youve used terraform to generate the secrets backend and frontend secrets, you will need to rerun this command.')
                     }
                 } else {
