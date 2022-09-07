@@ -5,11 +5,11 @@
   </a>
 </p>
 <p align="center">
-  <a aria-label="Vercel logo" href="https://vercel.com">
+  <a aria-label="Wrapper.js Logo" href="https://jamesmiller.blog/wrapperjs">
     <img src="https://img.shields.io/badge/MADE%20BY%20Vercel-000000.svg?style=for-the-badge&logo=Vercel&labelColor=000">
   </a>
-  <a aria-label="NPM version" href="https://github.com/JamesMillerBlog/wrapper.js/pkgs/npm/wrapper.js/40802160">
-    <img alt="" src="https://img.shields.io/npm/v/next.svg?style=for-the-badge&labelColor=000000">
+  <a aria-label="NPM version" href="https://github.com/JamesMillerBlog/wrapper.js/pkgs/npm/wrapper.js">
+    <img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/JamesMillerBlog/wrapper.js?color=blue&label=NPM&style=for-the-badge&labelColor=000000">
   </a>
   <a aria-label="License" href="https://github.com/JamesMillerBlog/wrapper.js/blob/main/LICENSE">
     <img alt="" src="https://img.shields.io/npm/l/next.svg?style=for-the-badge&labelColor=000000">
