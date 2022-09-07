@@ -18,8 +18,8 @@
 
 ## Getting Started
 
-Visit <a aria-label="next.js learn" href="https://nextjs.org/learn">https://nextjs.org/learn</a> to get started with Next.js.
+Visit <a aria-label="wrapper.js learn" href="https://jamesmiller.blog/wrapperjs-getting-started/">https://jamesmiller.blog/wrapperjs-getting-started/</a> to get started with Wrapper.js.
 
 ## Documentation
 
-Visit [https://nextjs.org/docs](https://nextjs.org/docs) to view the full documentation.
+Visit [https://jamesmiller.blog/about-wrapperjs](https://jamesmiller.blog/about-wrapperjs/) to learn more.
