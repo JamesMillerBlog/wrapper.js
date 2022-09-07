@@ -1,5 +1,7 @@
 import { createGlobalStyle } from 'styled-components'
 import Cognito from '../components/Cognito'
+import {  Authenticator } from '@aws-amplify/ui-react';
+
 // import '@aws-amplify/ui/dist/style.css';
 // import Script from 'next/script'
 
@@ -83,10 +85,12 @@ const GlobalStyle = createGlobalStyle`
 
 export default function App({ Component, pageProps }) {
     return (
-        <Cognito>  
-            <GlobalStyle />
-            <Component {...pageProps} />
-        </Cognito>
+        <Authenticator.Provider>
+            <Cognito>  
+                <GlobalStyle />
+                <Component {...pageProps} />
+            </Cognito>
+        </Authenticator.Provider>
     )
   }
   // <Script

@@ -57,16 +57,20 @@ module.exports = {
 
     destroy: (deploymentData) => {
 
-        const { domain_name } = deploymentData;
+        const { domain_name, state_s3_bucket } = deploymentData;
         console.log('Destroying Front End App');
         utils.runSyncTerminalCommand(
             `aws s3 rm s3://${domain_name} --recursive`
         );
+
         console.log('Running Terraform destroy command');
         utils.runAsyncTerminalCommand(
             `cd ./devops/terraform && terraform destroy -var-file="terraform.tfvars.json" -auto-approve`
         );
-
+        
+    //     utils.runSyncTerminalCommand(
+    //         `aws s3 rm s3://${state_s3_bucket} --recursive`
+    //     );
     }
 }
 

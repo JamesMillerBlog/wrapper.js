@@ -1,6 +1,6 @@
 import arg from 'arg';
 import { createProject } from './main';
-import { templateQuestion, envQuestion, envFileQuestion, awsCredentialsQuestion, secretsQuestion, secretsFileQuestion, s3BucketCreationQuestion } from './utils';
+import { welcomeMessage, templateQuestion, secretsQuestion, secretsFileQuestion, s3BucketCreationQuestion } from './utils';
 
 function parseArgumentsIntoOptions(rawArgs) {
  const args = arg(
@@ -35,18 +35,6 @@ async function promptForMissingOptions(options) {
        
     const { template } = await templateQuestion(options, defaultTemplate);
     
-    const { env } = await envQuestion();
-    
-    const { envFile } = ( env.includes('I would like to') ) ? await envFileQuestion() : { envFile: null };
-    
-    const { awsCredentials } = (env.includes('I would like to') && envFile.includes('Yes') ) ? await awsCredentialsQuestion() : { 
-        awsCredentials: {
-          region: undefined,
-          accessKeyId: undefined,
-          secretAccessKey: undefined       
-        }
-    };
-
     const { secrets } =  await secretsQuestion();
 
     const { secretsFile } = ( secrets.includes('Yes') ) ? await secretsFileQuestion() : { 
@@ -77,8 +65,6 @@ async function promptForMissingOptions(options) {
     return {
       ...options,
       template: options.template || template,
-      envFile: options.envFile || envFile,
-      awsCredentials: awsCredentials,
       secrets: secrets,
       secretsFile: secretsFile,
       s3Creation: s3Creation
@@ -86,6 +72,7 @@ async function promptForMissingOptions(options) {
   }
   
   export async function cli (args) {
+    welcomeMessage();
     let options = parseArgumentsIntoOptions(args);
     options = await promptForMissingOptions(options);
     await createProject(options);

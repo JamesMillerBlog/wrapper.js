@@ -1,6 +1,6 @@
 import { Auth } from 'aws-amplify';
-import { AmplifyAuthenticator, AmplifySignIn } from '@aws-amplify/ui-react';
-import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
 import React, { useEffect } from 'react';
 import cognitoStore from './../../stores/cognito';
 import userStore from './../../stores/user';
@@ -11,25 +11,6 @@ import axios from 'axios';
 
 setupAmplify();
 
-const getBearerToken = async () => {
-    try {
-        const token = await Auth.currentAuthenticatedUser();
-        const data = {
-            jwt: token.signInUserSession.idToken.jwtToken,
-            role: token.signInUserSession.accessToken.payload['cognito:groups'][0],
-            username: token.username 
-        }
-        return data;
-    }
-    catch (error) {
-        // console.log(error);
-    }
-    return {
-        jwt: null,
-        role: null,
-        username: null
-    }
-}
 const getUserData = (cognito) => axios({
     method: 'post',
     url: `${httpApiURL}/users/data`,
@@ -44,32 +25,46 @@ const getUserData = (cognito) => axios({
     const data = JSON.parse(res.data.body);
     return data;
 }, (error) => {
-    console.log(error);
+    throw new Error(error);
 })
     
 const Cognito = (props) => {
     const { children } = props;
     const { cognito, setCognito, signInState, setSignInState } = cognitoStore();
     const { setUser } = userStore();
+    const { user } = useAuthenticator((context) => [context.user]);
 
     useEffect(() => {
         const fetchData = async() => {
             // Update the document title using the browser API
             if(cognito != '' && cognito != undefined) {
-                // newUser.push(await getUserData(cognito))
-                // setUser(newUser);
-                setUser(await getUserData(cognito));
-            }
-            return onAuthUIStateChange( async(nextAuthState, authData) => {
-                if(authData != undefined && cognito == '' && nextAuthState == 'signedin') {
-                    let token = await getBearerToken();
-                    setCognito(token);
+                try{
+                    setUser(await getUserData(cognito));
+                } catch (e) {
+                    console.log(e);
                 }
-            });
+            }
+
+            if(user != undefined && cognito == '' && user.signInUserSession) {
+                const {accessToken, idToken} = user.signInUserSession;
+                const role = accessToken.payload['cognito:groups'];
+                const token = {
+                    jwt: idToken.jwtToken,
+                    role: (role) ? role[0] : '',
+                    username: accessToken.payload.username 
+                }
+                setCognito(token);
+            }
         }
-        fetchData();
+        
+        try {
+            fetchData();
+        }
+        catch (e) {
+            console.error(e);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cognito])
+    }, [user])
     
     useEffect(() => {
         const fetchData = async() => {
@@ -82,30 +77,26 @@ const Cognito = (props) => {
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [signInState]);
-
     return (
-    <>
-        {cognito == '' &&
-            <AmplifyWrapper>          
-                <AmplifyAuthenticator>
-                    <AmplifySignIn 
-                        slot="sign-in" 
+        <>
+            {cognito == '' ?
+                <AmplifyWrapper>          
+                    <Authenticator
                         headerText="Enter your details below"
                         submitButtonText="Sign in"
                         usernameAlias="email"
                         hideSignUp
-                    />
-                </AmplifyAuthenticator>
-            </AmplifyWrapper>
+                    >
+                    </Authenticator>
+                </AmplifyWrapper>
 
-        }
-        {cognito != '' &&
-            <ContentWrapper>
-                {children}
-            </ContentWrapper>
-        }
-    </>
-  )
+            :
+                <ContentWrapper>
+                    {children}
+                </ContentWrapper>
+            }
+        </>
+    )
 }
 
 const AmplifyWrapper = styled('div')`
@@ -123,5 +114,3 @@ const ContentWrapper = styled('div')`
 `
 
 export default Cognito;
-
-

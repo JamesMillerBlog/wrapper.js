@@ -1,9 +1,3 @@
-variable "stage_name" {
-  description = "Name of stage"
-  type        = string
-  default     = null
-}
-
 variable "service_name" {
   description = "Name of service"
   type        = string

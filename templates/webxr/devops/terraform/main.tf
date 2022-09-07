@@ -69,7 +69,6 @@ module "positions_data_table" {
 
 module "secrets_manager" {
     source = "./modules/secretsManager"
-    stage_name = var.stage
     service_name = var.service_name
     cognito_identity_pool_id = module.cognito.identity_pool_id
     cognito_user_pool_id = module.cognito.user_pool_id

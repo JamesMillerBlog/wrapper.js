@@ -27,38 +27,34 @@ const utils = require('./scripts/utils.js'),
         } else if(leadCommand == 'install') {
             utils.install();
             serverless.install();
-            ethereum.install();
+            // ethereum.install();
             next.install();
         } else {
-            // console.log(fs.readFileSync('./../../env.json', 'utf8'))
-            if(fs.existsSync('.env')) {
-                utils.awsAccessSetup(awsCredentials);    
-            } else {
-                console.log('No .env file detected, expect errors if no AWS credentials are present - unless this is being run in the CD pipeline.')
-            }
             if(leadCommand == 'secrets') { 
                 let secret = subCommand;
                 // Check if manually generated secret exists
                 if(await utils.secretExists(secret) != false) {
-                    // generate ENV files for terraform frameworks
-                    const manuallyCreatedSecrets = await utils.getSecrets(secret);
-                    terraform.generateEnv(manuallyCreatedSecrets);
-                    // check if terraform generated secrets exist
-                    if(await utils.secretExists(`${secret}-tf`) != false) {
-                        // generate ENV files for next & sls frameworks
-                        const terraformGeneratedSecrets = await utils.getSecrets(`${secret}-tf`);
-                        next.generateEnv(manuallyCreatedSecrets, terraformGeneratedSecrets);
-                        serverless.generateEnv(manuallyCreatedSecrets, terraformGeneratedSecrets);
-                        ethereum.generateEnv(manuallyCreatedSecrets, terraformGeneratedSecrets);
-                    } else {
-                        console.log('Only generated terraform variables as terraform has not yet been run.');
-                        console.log('Run terraform commands to generate terraform secrets, that can be used to generate front end and backend variables.');
-                        console.log('Once youve used terraform to generate the secrets backend and frontend secrets, you will need to rerun this command.')
+                    try {
+                        // generate ENV files for terraform frameworks
+                        const manuallyCreatedSecrets = await utils.getSecrets(secret);
+                        terraform.generateEnv(manuallyCreatedSecrets);
+                        const { tf_sls_service_name } = manuallyCreatedSecrets;
+                        // check if terraform generated secrets exist
+                        if(tf_sls_service_name && await utils.secretExists(`${tf_sls_service_name}-tf`) != false) {
+                            // generate ENV files for next & sls frameworks
+                            const terraformGeneratedSecrets = await utils.getSecrets(`${tf_sls_service_name}-tf`);
+                            next.generateEnv(manuallyCreatedSecrets, terraformGeneratedSecrets);
+                            serverless.generateEnv(manuallyCreatedSecrets, terraformGeneratedSecrets);
+                            // ethereum.generateEnv(manuallyCreatedSecrets, terraformGeneratedSecrets);
+                        } else {
+                            console.log('Congrats, Terraform files have been generated!\n');
+                            console.log('Next step, run Terraform commands to create AWS resources.');
+                            console.log("Once you've created your Terraform resources, rerun this command to generate secrets that can be used for the Back End and Front End.")
+                        }
                     }
-                } else {
-                    console.log('This secret does not exist.');
-                    console.log('Create a secret using the following format `${client}-${project}-${environemnt}` to run this function.');
-                    console.log('e.g bestClient-helloworld-dev');
+                    catch (e) {
+                        throw new Error(e)
+                    }
                 }
             } else if(leadCommand == 'terraform' || leadCommand == 'tf') {
                 const envVars = JSON.parse(fs.readFileSync('./devops/terraform/terraform.tfvars.json', 'utf8'));
@@ -67,15 +63,12 @@ const utils = require('./scripts/utils.js'),
                     terraform.init(envVars);
                 } else if (subCommand == 'plan') {
                     // plan terraform
-                    terraform.init(envVars);
                     terraform.plan();
                 } else if (subCommand == 'apply') {
                     // build and deploy app
-                    terraform.init(envVars);
                     terraform.apply();
                 } else if (subCommand == 'destroy') {
                     // destroy app
-                    terraform.init(envVars);
                     terraform.destroy(envVars);
                 } 
             } else if(leadCommand == 'serverless' | leadCommand == 'sls') {

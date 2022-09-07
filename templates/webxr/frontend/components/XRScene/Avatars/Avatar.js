@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect, Suspense, lazy } from 'react'
 import { useLoader, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from "three";
-import userStore from '../../stores/user';
 
 const Avatar = (props) => {
     const { position, rotation, image } = props;

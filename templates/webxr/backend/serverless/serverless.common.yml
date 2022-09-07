@@ -43,7 +43,7 @@ custom:
     id : ${file(./../../../serverless.env.json):cognito_authorizer}
   serverless-offline:
     host: '0.0.0.0'
-    httpsProtocol: ./../../../../../.wrapper/cert
+    httpsProtocol: ./../../../cert
     
 
 # lambdaPolicyXRay:

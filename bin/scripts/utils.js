@@ -1,7 +1,9 @@
 const cmd = require('node-cmd'),
     AWS = require('aws-sdk'),
-    fs = require('fs'),
     internalIp = require('internal-ip');
+
+// AWS.config.update({region: process.env.AWS_REGION});
+process.env.AWS_SDK_LOAD_CONFIG=1
 
 // **************************
 //      HELPER FUNCTIONS
@@ -103,9 +105,7 @@ module.exports = {
                 return binarySecretData;
             }
         } catch (error) {
-            console.log('Error retrieving secrets');
-            // console.log(error);
-            return false;
+            throw new Error(error);
         }
     },
 
@@ -116,19 +116,13 @@ module.exports = {
         );
     },
 
-    awsAccessSetup: (awsCredentials) => {
-        const { region, access_key_id, secret_access_key } = awsCredentials;
-        module.exports.runSyncTerminalCommand(`
-            export AWS_REGION=${region} && 
-            export AWS_ACCESS_KEY_ID=${access_key_id} && 
-            export AWS_SECRET_ACCESS_KEY=${secret_access_key}
-        `)
-    },
-
     secretExists: async(secretName) => {
-        if (await module.exports.getSecrets(secretName) != false) {
+        try { 
+            await module.exports.getSecrets(secretName)
             return true;
         }
-        return false;
+        catch (e) {
+            return false;
+        }
     }
 };
