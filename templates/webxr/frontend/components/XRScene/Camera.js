@@ -1,8 +1,8 @@
 import * as THREE from "three";
 
-import { useFrame, useThree, extend } from '@react-three/fiber';
-import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { useXR, useXRFrame } from '@react-three/xr'
+import { useFrame, useThree } from '@react-three/fiber';
+import React, { useRef, useEffect, useState } from 'react';
+import { useXR } from '@react-three/xr'
 import cognitoStore from './../../stores/cognito';
 import socketStore from './../../stores/socket';
 
@@ -36,9 +36,7 @@ const Camera = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [xPos, yPos, zPos, xRotation, yRotation, zRotation])
 
-    useFrame(() => updatePositions(positionVariables));
-    useXRFrame(() => updatePositions(positionVariables));
-    
+    useFrame(() => updatePositions(positionVariables))    
 
     useEffect(() => {
         set({ 

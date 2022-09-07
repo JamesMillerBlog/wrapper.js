@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect, Suspense, lazy } from 'react'
-import socketStore from '../../stores/socket';
+import React, { useState, useEffect } from 'react'
+import socketStore from './../../../stores/socket';
 import Avatar from './Avatar';
 import axios from 'axios';
-import { httpApiURL } from '../../utils';
-import cognitoStore from '../../stores/cognito';
+import { httpApiURL } from './../../../utils';
+import cognitoStore from './../../../stores/cognito';
 
 const Avatars = () => {
   const { cognito } = cognitoStore();
@@ -11,12 +11,13 @@ const Avatars = () => {
   const [getUserImages, setUserImages] = useState([]);
   
   useEffect(() => {
-    console.log(cognito)
     const fetchData = async() => {
       let allData = await getUserData(cognito, 'returnAll');
       let userImages ={};
-      for(let x = 0; x<allData.Items.length; x++) {
-        userImages[allData.Items[x].username] =allData.Items[x].image
+      if(allData != undefined) {
+        for(let x = 0; x<allData.Items.length; x++) {
+          userImages[allData.Items[x].username] =allData.Items[x].image
+        }
       }
       setUserImages(userImages)
     }

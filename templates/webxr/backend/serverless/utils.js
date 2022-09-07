@@ -104,8 +104,8 @@ module.exports = {
         // run the serverless offline command (incrementing from 4001 upwards)
         // create a proxy server on port 4000 for all endpoints
         const options = {
-            key: fs.readFileSync('./../../.wrapper/cert/key.pem'),
-            cert: fs.readFileSync('./../../.wrapper/cert/cert.pem')
+            key: fs.readFileSync('./cert/key.pem'),
+            cert: fs.readFileSync('./cert/cert.pem')
         };
         
         const httpPort = require("./serverless.env.json").local_api_rest_port;

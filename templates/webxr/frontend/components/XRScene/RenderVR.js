@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, Suspense, lazy } from 'react'
 import { VRCanvas, ARCanvas, useXR, DefaultXRControllers, Hands } from '@react-three/xr'
 import Camera from './Camera';
-import Avatars from '../Avatars';
+import Avatars from './Avatars';
 
 const RenderVR = (props) => {
     const { player } = useXR()

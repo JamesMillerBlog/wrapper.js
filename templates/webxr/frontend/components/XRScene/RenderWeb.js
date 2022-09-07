@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, Suspense, lazy } from 'react'
 import { Canvas } from '@react-three/fiber'
 import Camera from './Camera';
-import Avatars from '../Avatars';
+import Avatars from './Avatars';
 import KeyboardControls from './KeyboardControls';
 
 const RenderWeb = (props) => {
