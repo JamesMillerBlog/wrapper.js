@@ -1,6 +1,6 @@
 import arg from 'arg';
 import { createProject } from './main';
-import { welcomeMessage, templateQuestion, secretsQuestion, secretsFileQuestion, s3BucketCreationQuestion } from './utils';
+import { welcomeMessage, templateQuestion, secretsQuestion, secretsFileQuestion } from './utils';
 
 function parseArgumentsIntoOptions(rawArgs) {
  const args = arg(
@@ -58,16 +58,11 @@ async function promptForMissingOptions(options) {
 }`
     };
 
-    const { s3Creation } = (secrets.includes('Yes')) ? await s3BucketCreationQuestion() : {
-      s3Creation: undefined
-    } ;
-
     return {
       ...options,
       template: options.template || template,
       secrets: secrets,
-      secretsFile: secretsFile,
-      s3Creation: s3Creation
+      secretsFile: secretsFile
     };
   }
   

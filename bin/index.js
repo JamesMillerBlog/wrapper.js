@@ -11,12 +11,6 @@ const utils = require('./scripts/utils.js'),
     ethereum = require('./scripts/ethereum.js');
 
 ( async () => {
-    const awsCredentials = {
-        region: process.env.AWS_REGION,
-        access_key_id: process.env.AWS_ACCESS_KEY_ID,
-        secret_access_key: process.env.AWS_SECRET_ACCESS_KEY
-    };
-    
     if(process.argv.length > 2) {
         const leadCommand = process.argv[2];
         const subCommand = (process.argv[3]) ? process.argv[3] : null;
@@ -95,21 +89,3 @@ const utils = require('./scripts/utils.js'),
         }
     }
 })(process);
-
-// unwrap commands = setting up wrapper.js with scaffolding tools
-// gobble commands = development commands
-
-// gobble secrets client-project-dev
-// gobble next export
-// gobble terraform destroy
-// gobble terraform init
-// gobble terraform apply
-
-/*
-   Get private key json from docker:
-   1. docker exec -it ec2-user_geth-bootnode_1 sh
-   2. cd ~/.ethereum/keystore
-   3. ls
-   4. cat ${selected file} 
-   5. copy json into file (keep original name from file) and upload to metamask
-*/
