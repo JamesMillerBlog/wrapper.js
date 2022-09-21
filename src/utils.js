@@ -15,7 +15,7 @@ export const templateQuestion = async(options, defaultTemplate) => {
     type: 'list',
     name: 'template',
     message: 'Please choose which project template to use',
-    choices: ['WebXR'],
+    choices: ['WebXR', 'Auth'],
     default: defaultTemplate,
   };
   if (!options.template) {
@@ -48,7 +48,7 @@ export const secretsQuestion = async() => {
     message: 'Would you like Wrapper.js to create a Secret in AWS Secrets Manager for you?',
     choices: [
       'Yes - choose this if you are not sure.',
-      'No - I will manually create my own AWS Secret based on the template Wrapper.js creates for me in the root directory.'
+      'No - I will manually create my own AWS Secret based on the documentation noted on https://jamesmiller.blog/wrapperjs.'
     ],
   };
   return await inquirer.prompt(secrets)
@@ -58,14 +58,6 @@ export const copyTemplateFiles = async(options) => {
   return copy(options.templateDirectory, options.targetDirectory, {
     clobber: false,
   });
-}
- 
-export const createEnvFile = async(options) => {
-  if(options.envFile.includes("Yes")) {
-    fs.writeFileSync(`${options.targetDirectory}/.env`, `AWS_REGION=${options.awsCredentials.region}\nAWS_ACCESS_KEY_ID=${options.awsCredentials.accessKeyId}\nAWS_SECRET_ACCESS_KEY=${options.awsCredentials.secretAccessKey}`);
-  } else {
-    fs.writeFileSync(`${options.targetDirectory}/.env`, `# edit these fields with your AWS details\n# remove 'example-' from this file's name so its called '.env'\n# remove the 3 comments at the top of this file\nAWS_REGION=eu-west-2\nAWS_ACCESS_KEY_ID=ABCDEFGHIJKLMNOPQRSTUVWXYZ\nAWS_SECRET_ACCESS_KEY=0123456789`);
-  }
 }
 
 export const createSecrets = async(options) => {
@@ -95,34 +87,21 @@ export const createSecrets = async(options) => {
         console.log(`Sync stderr: ${command.stderr}`)
         throw new Error(command.stderr);
     }
-  } else {
-    fs.writeFileSync(`${options.targetDirectory}/example-secrets.json`, secretsFile);
   }
 }
 
-export const s3BucketCreationQuestion = async() => {
-  const s3Creation = {
-    type: 'list',
-    name: 's3Creation',
-    message: 'Would you like Wrapper.js to create the S3 bucket that stores the Terraform state files?',
-    choices: [
-      'Yes - choose this if you are not sure.',
-      'No - I will manually create my own S3 Bucket for Terraform state.'
-    ],
-  };
-  return await inquirer.prompt(s3Creation)
-};
-
 export const createS3Bucket = async(options) => {
-  const { secretsFile } = options;
-  const { region, s3_bucket } = secretsFile;
-  let command = cmd.runSync(`aws s3api create-bucket --bucket ${s3_bucket} --region ${region} --create-bucket-configuration LocationConstraint=${region}`);
-  if (command.err) {
-      console.log(`Sync Err ${command.err}`);
-      throw new Error(command.err);
-  } else if (command.stderr) {
-      console.log(`Sync stderr: ${command.stderr}`)
-      throw new Error(command.stderr);
+  const { secretsFile, secrets } = options;
+  if(secrets.includes('Yes')) {
+    const { region, s3_bucket } = secretsFile;
+    let command = cmd.runSync(`aws s3api create-bucket --bucket ${s3_bucket} --region ${region} --create-bucket-configuration LocationConstraint=${region}`);
+    if (command.err) {
+        console.log(`Sync Err ${command.err}`);
+        throw new Error(command.err);
+    } else if (command.stderr) {
+        console.log(`Sync stderr: ${command.stderr}`)
+        throw new Error(command.stderr);
+    }
   }
 }
 

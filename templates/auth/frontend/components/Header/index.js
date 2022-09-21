@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import styled, { StyledComponent } from 'styled-components';
-import { AmplifySignOut } from '@aws-amplify/ui-react';
-import Link from 'next/link'
+import React from 'react';
+import styled from 'styled-components';
 import cognitoStore from './../../stores/cognito'
-import userStore from './../../stores/user'
-import { useRouter } from 'next/router';
-import { imageUrl } from '../../utils'
 
 export default function Header() {
     const { setCognito, setSignInState } = cognitoStore();
@@ -29,7 +24,7 @@ const Nav = styled('nav')`
     display: block;
     height: 80px;
     width: 100vw;
-    background-color: #102B4E;
+    background-color: lightblue;
     margin: 0;
     position: relative;
     top: 0px;
@@ -41,8 +36,13 @@ const SignoutBtn = styled('button')`
     font-size: 16px;
     text-decoration: none;
     &:hover {
-        background: none;
+        background: darkblue;
     }
     cursor: pointer;
     color: white;
+    background-color: blue;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    width: 100px
 `;

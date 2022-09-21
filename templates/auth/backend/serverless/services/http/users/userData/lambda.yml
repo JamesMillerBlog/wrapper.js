@@ -1,0 +1,15 @@
+getUserData:
+  handler: userData/index.handler
+  events:
+    - http:
+        path: users/data
+        method: get
+        integration: lambda
+        authorizer: 
+          type: COGNITO_USER_POOLS
+          authorizerId: ${self:custom.apiAuthorizer}
+        cors:
+          origin: '*'
+          headers: # <-- Specify allowed headers
+            - Content-Type
+            - Authorization

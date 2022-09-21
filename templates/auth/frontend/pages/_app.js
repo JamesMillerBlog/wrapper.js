@@ -19,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     :root {
-        --amplify-primary-color:#0A3369;
+        --amplify-primary-color:lightblue;
         --amplify-primary-tint: #0A3369;
         --amplify-primary-shade:#0A3369;
         --amplify-secondary-color:#0A3369;
@@ -35,7 +35,7 @@ const GlobalStyle = createGlobalStyle`
         --amplify-primary-contrast: var(--amplify-white);
         --amplify-secondary-contrast:var(--amplify-white);
         --amplify-tertiary-contrast:var(--amplify-red);
-        --amplify-font-family: 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';  
+        --amplify-font-family:'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';  
         --amplify-text-xxs:0.75rem;
         --amplify-text-xs:0.81rem;
         --amplify-text-sm:0.875rem;
