@@ -1,6 +1,6 @@
 on:
-  pull_request:
-    branches:
+  push:
+    branches: 
       - master
 
 jobs:
@@ -22,10 +22,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Install Wrapper.js
         run: npm install -g jamesmillerblog/wrapper.js
-      - name: Create PR Secret
-        run: gobble duplicate ${{ secrets.WRAPPERJS_SECRET_NAME }} ${{ github.event.number }}
+      - name: Create Dev Secret
+        run: gobble duplicate ${{ secrets.WRAPPERJS_SECRET_NAME }} dev
       - name: Retrieve Environment Secrets
-        run: gobble secrets pr-${{ github.event.number }}-${{ secrets.WRAPPERJS_SECRET_NAME }}
+        run: gobble secrets dev-${{ secrets.WRAPPERJS_SECRET_NAME }}
       - name: Terraform Init
         run: gobble tf init
       - name: Terraform Plan
@@ -40,4 +40,4 @@ jobs:
         run: gobble sls deploy
       - name: Destroy environment if job failed or was cancelled
         if: ${{ failure() || cancelled() }}
-        run: gobble sls remove && gobble tf destroy && gobble finished ${{ secrets.WRAPPERJS_SECRET_NAME }}
+        run: gobble tf destroy && gobble sls remove

@@ -55,7 +55,7 @@ const utils = require('./scripts/utils.js'),
                 const secrets = await utils.getSecrets(secret);
                 if(duplicate) {
                     let env = '';
-                    if(typeof(duplicate)== number) {
+                    if(typeof(parseInt(duplicate))== 'number') {
                         env = 'pr-'
                     }
                     const prSecret = secrets;
@@ -64,11 +64,14 @@ const utils = require('./scripts/utils.js'),
                     prSecret.tf_sls_next_domain_name = `${env}${duplicate}.${secrets.tf_sls_next_root_domain_name}`
                     prSecret.tf_state_s3_bucket = `${env}${duplicate}-${secrets.tf_state_s3_bucket}`
                     utils.runSyncTerminalCommand(
-                        `aws secretsmanager create-secret --name ${env}${pr}-${secret} --secret-string ${JSON.stringify(JSON.stringify(prSecret))}`
-                    )
-                    if(await utils.secretExists(`${env}${pr}-${secret}`) == false) {
-                        throw new Error(`new secret ${env}${pr}-${secret} not created`)
+                        `aws secretsmanager create-secret --name ${env}${duplicate}-${secret} --secret-string ${JSON.stringify(JSON.stringify(prSecret))}`
+                    );
+                    if(await utils.secretExists(`${env}${duplicate}-${secret}`) == false) {
+                        throw new Error(`new secret ${env}${duplicate}-${secret} not created`)
+                    } else {
+                        console.log(`secret ${env}${duplicate}-${secret} has been created`)
                     }
+                    
                 }
             } else {
                 throw new Error(`secret ${secret} does not exist`)

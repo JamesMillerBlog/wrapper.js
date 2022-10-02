@@ -1,7 +1,6 @@
 on:
   pull_request:
-    branches:
-      - master
+    types: [ closed ]
 
 jobs:
   deploy:
@@ -20,24 +19,16 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      - name: Install Wrapper.js
-        run: npm install -g jamesmillerblog/wrapper.js
-      - name: Create PR Secret
-        run: gobble duplicate ${{ secrets.WRAPPERJS_SECRET_NAME }} ${{ github.event.number }}
       - name: Retrieve Environment Secrets
         run: gobble secrets pr-${{ github.event.number }}-${{ secrets.WRAPPERJS_SECRET_NAME }}
+      - name: Remove Back End
+        run: gobble sls remove
       - name: Terraform Init
         run: gobble tf init
-      - name: Terraform Plan
-        run: gobble tf plan
-      - name: Terraform Apply
-        run: gobble tf apply
-      - name: Retrieve Terraform Generated Secrets
-        run: gobble secrets ${{ secrets.WRAPPERJS_SECRET_NAME }}
-      - name: Deploy Front End
-        run: gobble next export
-      - name: Deploy Back End
-        run: gobble sls deploy
+      - name: Terraform Destroy
+        run: gobble tf destroy
+      - name: Remove PR Environment
+        run: gobble finished pr-${{ github.event.number }}-${{ secrets.WRAPPERJS_SECRET_NAME }}
       - name: Destroy environment if job failed or was cancelled
         if: ${{ failure() || cancelled() }}
-        run: gobble sls remove && gobble tf destroy && gobble finished ${{ secrets.WRAPPERJS_SECRET_NAME }}
+        run: gobble sls remove && gobble tf destroy && gobble finished ${{ secrets.WRAPPERJS_SECRET_NAME }}  

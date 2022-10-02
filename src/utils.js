@@ -110,7 +110,7 @@ export const secretsFileQuestion = async() => {
   const configuration_name_prompt = {
     name: 'configuration_name',
     message: 'Enter a name for your wrapper configuration, this will set: the name of your secret, service for Serverless Framework and the Terraform generated secrets name.',
-    default: 'my-wrapperjs-config',
+    default: 'wrapperjs-config',
     validate
   };  
 

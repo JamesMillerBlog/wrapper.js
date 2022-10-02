@@ -1,6 +1,7 @@
 on:
   push:
-    branches: [ $default-branch ]
+    branches: 
+      - master
 
 jobs:
   deploy:
@@ -21,8 +22,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Install Wrapper.js
         run: npm install -g jamesmillerblog/wrapper.js
+      - name: Create Dev Secret
+        run: gobble duplicate ${{ secrets.WRAPPERJS_SECRET_NAME }} dev
       - name: Retrieve Environment Secrets
-        run: gobble secrets ${{ secrets.WRAPPERJS_SECRET_NAME }}
+        run: gobble secrets dev-${{ secrets.WRAPPERJS_SECRET_NAME }}
       - name: Terraform Init
         run: gobble tf init
       - name: Terraform Plan
