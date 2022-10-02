@@ -14,4 +14,4 @@ jobs:
       - run: echo "hello world :D"
       - run: echo "terraform --version"
       - run: echo "serverless --version"
-      - run: echo "node --version"
+      - run: echo "::set-output name=version::$(node --version)"
