@@ -14,7 +14,6 @@
     "serverless": "^2.62.0"
   },
   "devDependencies": {
-    "serverless-deployment-bucket": "^1.5.1",
     "serverless-domain-manager": "^5.2.0",
     "serverless-offline": "^8.2.0"
   }

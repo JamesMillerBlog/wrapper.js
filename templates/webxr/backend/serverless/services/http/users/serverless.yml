@@ -1,6 +1,5 @@
 service: ${file(./../../../serverless.common.yml):service}-${self:custom.service}
 useDotenv: true
-projectDir: ../../../
 
 provider: ${self:custom.common.provider}
 
@@ -9,7 +8,6 @@ functions:
 
 plugins:
   - serverless-offline
-  - serverless-deployment-bucket
   
 custom:
   service: users-service

@@ -16,7 +16,6 @@
     "twilio": "^3.69.0"
   },
   "devDependencies": {
-    "serverless-deployment-bucket": "^1.5.1",
     "serverless-offline": "^8.2.0"
   }
 }

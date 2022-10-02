@@ -1,5 +1,5 @@
 const fs = require('fs'),
-http = require("http"),
+http = require("http-server"),
 httpProxy = require("http-proxy"),
 cmd = require('node-cmd');
 
@@ -157,18 +157,35 @@ module.exports = {
         // wsserver.listen(wsPort);
     },
     deploy: async() => {
+        const httpPort = require("./serverless.env.json").local_api_rest_port;
+        // const lambdaHttpPort = httpPortNumber - 50;
+        
+        const wsPort = require("./serverless.env.json").local_api_ws_port;
         const http = await module.exports.ls('services/http').catch(console.error);
         // const ws = await module.exports.ls('services/ws').catch(console.error);;
-        module.exports.deployServices(http, 'http');
-        module.exports.deployServices(['ws'], 'ws');
+        const services = await module.exports.generateLocalServices(httpPort, wsPort);
+        if(services.http.length > 0) {
+            module.exports.deployServices(http, 'http');
+        }
+        if(services.ws.length > 0) {
+            module.exports.deployServices(['ws'], 'ws');
+        }
     },
 
-    remove: async() => {     
+    remove: async() => {    
+        const httpPort = require("./serverless.env.json").local_api_rest_port;
+        // const lambdaHttpPort = httpPortNumber - 50;
+        
+        const wsPort = require("./serverless.env.json").local_api_ws_port; 
         const http = await module.exports.ls('services/http').catch(console.error);
         const ws = await module.exports.ls('services/ws').catch(console.error);
-        
-        module.exports.removeServices(http, 'http');
-        module.exports.removeServices(ws, 'ws');
+        const services = await module.exports.generateLocalServices(httpPort, wsPort);
+        if(services.http.length > 0) {
+            module.exports.removeServices(http, 'http');
+        }
+        if(services.ws.length > 0) {
+            module.exports.removeServices(ws, 'ws');
+        }
     }, 
      // Function to run syncronous terminal commands
      runSyncTerminalCommand: (terminalCommand) => {
