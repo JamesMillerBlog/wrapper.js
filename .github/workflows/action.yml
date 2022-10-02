@@ -12,6 +12,4 @@ jobs:
         with:
           node-version: latest
       - run: echo "hello world :D"
-      - run: echo "terraform --version"
-      - run: echo "serverless --version"
-      - run: echo "::set-output name=version::$(node --version)"
+      - run: node --version
