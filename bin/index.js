@@ -31,11 +31,11 @@ const utils = require('./scripts/utils.js'),
                 const {tf_state_s3_bucket} = await utils.getSecrets(secret);
                 if(tf_state_s3_bucket) {
                     utils.runSyncTerminalCommand(
-                        `aws s3 rm s3://my-wrapperjs-config.minimiller.digital --recursive`
+                        `aws s3 rm s3://${tf_state_s3_bucket} --recursive`
                     );
     
                     utils.runSyncTerminalCommand(
-                        `aws s3api delete-bucket --bucket my-wrapperjs-config.minimiller.digital`
+                        `aws s3api delete-bucket --bucket ${tf_state_s3_bucket}`
                     );
                 }
                 utils.runSyncTerminalCommand(
