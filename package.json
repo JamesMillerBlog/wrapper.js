@@ -4,10 +4,6 @@
   "description": "A Full Stack Javascript Devops Tool",
   "author": "James Miller <hi@jamesmiller.blog> (https://jamesmiller.blog)",
   "main": "./bin/index.js",
-  "scripts": {
-    "dev": "gobble dev",
-    "deployBackend": "gobble sls deploy"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/jamesmillerblog/wrapper.js"
