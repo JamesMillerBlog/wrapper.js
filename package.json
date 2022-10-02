@@ -23,7 +23,6 @@
     "dotenv": "^10.0.0",
     "esm": "^3.2.25",
     "execa": "^6.1.0",
-    "fs": "^0.0.1-security",
     "inquirer": "^8.2.1",
     "internal-ip": "^6.2.0",
     "listr": "^0.14.3",

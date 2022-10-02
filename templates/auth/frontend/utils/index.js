@@ -3,8 +3,8 @@ const httpLocalPort = process.env.local_api_rest_port;
 const wsLocalPort = parseInt(httpLocalPort) + 500;
 const stage = process.env.stage;
 const httpLocalUrl = `http://${localIP}:${httpLocalPort}/${stage}`;
-const httpLiveUrl = `http://api.${process.env.domain_name}`;
-const wsLocalUrl = `wss://${localIP}:${wsLocalPort}/${stage}`;
+const httpLiveUrl = `https://api.${process.env.domain_name}`;
+const wsLocalUrl = `ws://${localIP}:${wsLocalPort}/${stage}`;
 const wsLiveUrl = `wss://ws.${process.env.domain_name}`;
 const {domain_name} = process.env; 
 
