@@ -1,7 +1,7 @@
 on:
   pull_request:
     branches: 
-      - main
+      - $default-branch
 
 jobs:
   deploy:
@@ -13,4 +13,4 @@ jobs:
           node-version: latest
       - uses: hashicorp/setup-terraform@v2
       - name: check PR
-        run: echo(${{ github.event.number }})
+        run: echo ${{ github.event.number }}
