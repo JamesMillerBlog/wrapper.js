@@ -41,17 +41,37 @@ const utils = require('./scripts/utils.js'),
                 utils.runSyncTerminalCommand(
                     `aws secretsmanager delete-secret --secret-id ${secret} --force-delete-without-recovery`
                 );
+            } else {
+                if(await utils.secretExists(`${env}${pr}-${secret}`) == false) {
+                    throw new Error(`secret ${secret} does not exist`)
+                }
             }
-        } else if(leadCommand == 'pr') {
+        } else if(leadCommand == 'duplicate') {
             let secret = subCommand;
-            const pr = (process.argv[4]) ? process.argv[4] : null;
+            const duplicate = (process.argv[4]) ? process.argv[4] : null;
 
             // Check if manually generated secret exists
             if(await utils.secretExists(secret) != false) {
                 const secrets = await utils.getSecrets(secret);
-                if(pr) {
-                    console.log(pr)
+                if(duplicate) {
+                    let env = '';
+                    if(typeof(duplicate)== number) {
+                        env = 'pr-'
+                    }
+                    const prSecret = secrets;
+                    prSecret.tf_sls_service_name = `${env}${duplicate}-${secrets.tf_sls_service_name}`
+                    prSecret.tf_sls_next_stage = `${env}${duplicate}`;
+                    prSecret.tf_sls_next_domain_name = `${env}${duplicate}.${secrets.tf_sls_next_root_domain_name}`
+                    prSecret.tf_state_s3_bucket = `${env}${duplicate}-${secrets.tf_state_s3_bucket}`
+                    utils.runSyncTerminalCommand(
+                        `aws secretsmanager create-secret --name ${env}${pr}-${secret} --secret-string ${JSON.stringify(JSON.stringify(prSecret))}`
+                    )
+                    if(await utils.secretExists(`${env}${pr}-${secret}`) == false) {
+                        throw new Error(`new secret ${env}${pr}-${secret} not created`)
+                    }
                 }
+            } else {
+                throw new Error(`secret ${secret} does not exist`)
             }
         } else {
             if(leadCommand == 'secrets') { 
@@ -79,6 +99,8 @@ const utils = require('./scripts/utils.js'),
                     catch (e) {
                         throw new Error(e)
                     }
+                } else {
+                    throw new Error(`secret ${secret} does not exist`)
                 }
             } else if(leadCommand == 'terraform' || leadCommand == 'tf') {
                 const envVars = JSON.parse(fs.readFileSync('./devops/terraform/terraform.tfvars.json', 'utf8'));

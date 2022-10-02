@@ -14,11 +14,12 @@ export async function createProject(options) {
       {
         title: 'Create secrets',
         task: async() => await createSecrets(options),
+        enabled: () => options.secrets.includes('Yes')
       },
       {
         title: 'Create Terraform State S3 Bucket',
-        task: async() => await createS3Bucket(options)
-        // enabled: () => options.s3Creation
+        task: async() => await createS3Bucket(options),
+        enabled: () => options.secrets.includes('Yes')
       },
       {
         title: 'Install dependencies',
