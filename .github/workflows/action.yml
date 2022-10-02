@@ -4,7 +4,7 @@ on:
       - feature/*
 
 jobs:
-  setup_dependencies:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,7 +22,7 @@ jobs:
           aws-region: eu-west-2
       - name: Install Wrapper.js
         run: npm install -g jamesmillerblog/wrapper.js
-      - run: echo "hello world :D"
-      - run: node --version
-      - run: terraform --version
-      - run: serverless --version
+      - name: Gobble Secrets
+        run: gobble secrets my-wrapperjs-config
+
+      
