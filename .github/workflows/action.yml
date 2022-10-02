@@ -1,7 +1,7 @@
 on:
   push:
     branches: 
-      - feature/actions
+      - feature/*
 
 jobs:
   print_hello:
