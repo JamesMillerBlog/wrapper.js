@@ -25,7 +25,6 @@ const utils = require('./scripts/utils.js'),
             // ethereum.install();
             next.install();
         } else if(leadCommand == 'finished') {
-
             let secret = subCommand;
             // Check if manually generated secret exists
             if(await utils.secretExists(secret) != false) {
@@ -43,7 +42,17 @@ const utils = require('./scripts/utils.js'),
                     `aws secretsmanager delete-secret --secret-id ${secret} --force-delete-without-recovery`
                 );
             }
+        } else if(leadCommand == 'pr') {
+            let secret = subCommand;
+            const pr = (process.argv[4]) ? process.argv[4] : null;
 
+            // Check if manually generated secret exists
+            if(await utils.secretExists(secret) != false) {
+                const secrets = await utils.getSecrets(secret);
+                if(pr) {
+                    console.log(pr)
+                }
+            }
         } else {
             if(leadCommand == 'secrets') { 
                 let secret = subCommand;
