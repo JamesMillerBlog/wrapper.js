@@ -12,6 +12,11 @@ jobs:
         with:
           node-version: latest
       - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 3.27.0
+      - name: Install Serverless Framework
+        run: npm install -g serverless
       - run: echo "hello world :D"
       - run: node --version
       - run: terraform --version
+      - run: serverless --version
