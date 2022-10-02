@@ -2,6 +2,7 @@
 
 const dotenv = require('dotenv');
 const fs = require('fs');
+const cmd = require('node-cmd');
 dotenv.config();
 
 const utils = require('./scripts/utils.js'),
@@ -23,6 +24,26 @@ const utils = require('./scripts/utils.js'),
             serverless.install();
             // ethereum.install();
             next.install();
+        } else if(leadCommand == 'finished') {
+
+            let secret = subCommand;
+            // Check if manually generated secret exists
+            if(await utils.secretExists(secret) != false) {
+                const {tf_state_s3_bucket} = await utils.getSecrets(secret);
+                if(tf_state_s3_bucket) {
+                    utils.runSyncTerminalCommand(
+                        `aws s3 rm s3://my-wrapperjs-config.minimiller.digital --recursive`
+                    );
+    
+                    utils.runSyncTerminalCommand(
+                        `aws s3api delete-bucket --bucket my-wrapperjs-config.minimiller.digital`
+                    );
+                }
+                utils.runSyncTerminalCommand(
+                    `aws secretsmanager delete-secret --secret-id ${secret} --force-delete-without-recovery`
+                );
+            }
+
         } else {
             if(leadCommand == 'secrets') { 
                 let secret = subCommand;

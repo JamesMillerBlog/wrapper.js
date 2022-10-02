@@ -161,8 +161,8 @@ module.exports = {
         // const lambdaHttpPort = httpPortNumber - 50;
         
         const wsPort = require("./serverless.env.json").local_api_ws_port;
-        const http = await module.exports.ls('services/http').catch(console.error);
-        // const ws = await module.exports.ls('services/ws').catch(console.error);;
+        const http = await module.exports.ls('services/http').catch(console.warning('no http services to deploy'));
+        // const ws = await module.exports.ls('services/ws').catch(console.warning('no websocket services to deploy'));
         const services = await module.exports.generateLocalServices(httpPort, wsPort);
         if(services.http.length > 0) {
             module.exports.deployServices(http, 'http');
@@ -177,14 +177,14 @@ module.exports = {
         // const lambdaHttpPort = httpPortNumber - 50;
         
         const wsPort = require("./serverless.env.json").local_api_ws_port; 
-        const http = await module.exports.ls('services/http').catch(console.error);
-        const ws = await module.exports.ls('services/ws').catch(console.error);
+        const http = await module.exports.ls('services/http').catch(console.warning('no http services to remove'));
+        // const ws = await module.exports.ls('services/ws').catch(console.warning('no websocket services to remove'));
         const services = await module.exports.generateLocalServices(httpPort, wsPort);
         if(services.http.length > 0) {
             module.exports.removeServices(http, 'http');
         }
         if(services.ws.length > 0) {
-            module.exports.removeServices(ws, 'ws');
+            module.exports.removeServices(['ws'], 'ws');
         }
     }, 
      // Function to run syncronous terminal commands
