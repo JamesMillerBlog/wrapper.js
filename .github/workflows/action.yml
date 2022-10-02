@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@latest
       - run: echo "hello world :D"
       - run: echo "terraform --version"
       - run: echo "serverless --version"
