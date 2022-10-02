@@ -11,5 +11,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: latest
+      - uses: serverless/github-action@v3.1 
+      uses: hashicorp/setup-terraform@v2
       - run: echo "hello world :D"
       - run: node --version
+      - run: serverless --version
+      - run: terraform --version
