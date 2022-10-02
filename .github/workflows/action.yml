@@ -7,10 +7,7 @@ jobs:
   setup_dependencies:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout
-      - uses: actions/setup-node
-      - uses: hashicorp/setup-terraform
-      - uses: serverless/github-action
+      - uses: actions/checkout@v3
       - run: echo "hello world :D"
       - run: echo "terraform --version"
       - run: echo "serverless --version"
