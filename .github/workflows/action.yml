@@ -4,15 +4,14 @@ on:
       - feature/*
 
 jobs:
-  print_hello:
+  setup_dependencies:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up dependencies
-        uses: actions/checkout
-        uses: actions/setup-node
-        uses: hashicorp/setup-terraform
-        uses: serverless/github-action
-        run: echo "hello world :D"
-        run: echo "terraform --version"
-        run: echo "serverless --version"
-        run: echo "node --version"
+      - uses: actions/checkout
+      - uses: actions/setup-node
+      - uses: hashicorp/setup-terraform
+      - uses: serverless/github-action
+      - run: echo "hello world :D"
+      - run: echo "terraform --version"
+      - run: echo "serverless --version"
+      - run: echo "node --version"
