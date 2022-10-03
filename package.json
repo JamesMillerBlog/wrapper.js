@@ -1,15 +1,15 @@
 {
   "name": "@jamesmillerblog/wrapper.js",
-  "version": "0.1.0",
+  "version": "0.3.3",
   "description": "A Full Stack Javascript Devops Tool",
   "author": "James Miller <hi@jamesmiller.blog> (https://jamesmiller.blog)",
   "main": "./bin/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jamesmillerblog/wrapper.js"
+    "url": "https://github.com/JamesMillerBlog/wrapper.js"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/jamesmillerblog"
+    "registry": "https://npm.pkg.github.com"
   },
   "license": "ISC",
   "dependencies": {
