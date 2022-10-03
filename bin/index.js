@@ -72,7 +72,7 @@ const utils = require('./scripts/utils.js'),
                         console.log(`secret ${env}${duplicate}-${secret} has been created`)
                     }
                     utils.runSyncTerminalCommand(
-                        `aws s3api create-bucket --bucket ${prSecret.tf_state_s3_bucket} --region ${prSecret.region} --create-bucket-configuration LocationConstraint=${prSecret.tf_sls_next_region}`
+                        `aws s3api create-bucket --bucket ${prSecret.tf_state_s3_bucket} --region ${prSecret.tf_sls_next_region} --create-bucket-configuration LocationConstraint=${prSecret.tf_sls_next_region}`
                     )
                     
                 }
