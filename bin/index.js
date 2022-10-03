@@ -55,7 +55,7 @@ const utils = require('./scripts/utils.js'),
                 const secrets = await utils.getSecrets(secret);
                 if(duplicate) {
                     let env = '';
-                    if(typeof(parseInt(duplicate))== 'number') {
+                    if(typeof(parseInt(duplicate)) != 'NaN') {
                         env = 'pr-'
                     }
                     const prSecret = secrets;
