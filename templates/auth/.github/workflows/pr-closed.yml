@@ -1,10 +1,9 @@
 on:
   pull_request:
-    branches:
-      - master
+    types: [ closed ]
 
 jobs:
-  deploy:
+  destroy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,22 +21,13 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Install Wrapper.js
         run: npm install -g jamesmillerblog/wrapper.js
-      - name: Create PR Secret
-        run: gobble duplicate ${{ secrets.WRAPPERJS_SECRET_NAME }} ${{ github.event.number }}
       - name: Retrieve Environment Secrets
         run: gobble secrets pr-${{ github.event.number }}-${{ secrets.WRAPPERJS_SECRET_NAME }}
+      - name: Remove Serverless
+        run: gobble sls remove
       - name: Terraform Init
         run: gobble tf init
-      - name: Terraform Plan
-        run: gobble tf plan
-      - name: Terraform Apply
-        run: gobble tf apply
-      - name: Retrieve Terraform Generated Secrets
-        run: gobble secrets ${{ secrets.WRAPPERJS_SECRET_NAME }}
-      - name: Deploy Front End
-        run: gobble next export
-      - name: Deploy Back End
-        run: gobble sls deploy
-      - name: Destroy environment if job failed or was cancelled
-        if: ${{ failure() || cancelled() }}
-        run: gobble sls remove && gobble tf destroy && gobble finished ${{ secrets.WRAPPERJS_SECRET_NAME }}
+      - name: Destroy Terraform
+        run: gobble tf destroy
+      - name: Remove Wrapper.JS PR Secret & S3 Bucket
+        run: gobble finished pr-${{ github.event.number }}-${{ secrets.WRAPPERJS_SECRET_NAME }}

@@ -1,0 +1,69 @@
+on:
+  pull_request:
+    types: [ opened, reopened ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - uses: hashicorp/setup-terraform@v2
+      - name: Install Serverless Framework
+        run: npm install -g serverless
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Install Wrapper.js
+        run: npm install -g jamesmillerblog/wrapper.js
+      - name: Create PR Secret
+        run: gobble duplicate ${{ secrets.WRAPPERJS_SECRET_NAME }} ${{ github.event.number }}
+      - name: Retrieve Environment Secrets
+        run: gobble secrets pr-${{ github.event.number }}-${{ secrets.WRAPPERJS_SECRET_NAME }}
+      - name: Terraform Init
+        run: gobble tf init
+      - name: Terraform Plan
+        run: gobble tf plan
+      - name: Terraform Apply
+        run: gobble tf apply
+      - name: Retrieve Terraform Generated Secrets
+        run: gobble secrets pr-${{ github.event.number }}-${{ secrets.WRAPPERJS_SECRET_NAME }}
+      - name: Deploy Front End
+        run: gobble next export
+      - name: Deploy Back End
+        run: gobble sls deploy
+  catch_failed_deployment:
+    needs: deploy
+    if: ${{ failure() || cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - uses: hashicorp/setup-terraform@v2
+      - name: Install Serverless Framework
+        run: npm install -g serverless
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Install Wrapper.js
+        run: npm install -g jamesmillerblog/wrapper.js
+      - name: Retrieve Environment Secrets
+        run: gobble secrets pr-${{ github.event.number }}-${{ secrets.WRAPPERJS_SECRET_NAME }}
+      - name: Remove Serverless
+        run: gobble sls remove
+      - name: Terraform Init
+        run: gobble tf init
+      - name: Destroy Terraform
+        run: gobble tf destroy
+      - name: Remove Wrapper.JS PR Secret & S3 Bucket
+        run: gobble finished pr-${{ github.event.number }}-${{ secrets.WRAPPERJS_SECRET_NAME }}
