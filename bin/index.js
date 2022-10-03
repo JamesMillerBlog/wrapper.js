@@ -66,6 +66,9 @@ const utils = require('./scripts/utils.js'),
                     utils.runSyncTerminalCommand(
                         `aws secretsmanager create-secret --name ${env}${duplicate}-${secret} --secret-string ${JSON.stringify(JSON.stringify(prSecret))}`
                     );
+                    utils.runSyncTerminalCommand(
+                        `aws s3api create-bucket --bucket ${prSecret.tf_state_s3_bucket} --region ${prSecret.region} --create-bucket-configuration LocationConstraint=${prSecret.region}`
+                    )
                     if(await utils.secretExists(`${env}${duplicate}-${secret}`) == false) {
                         throw new Error(`new secret ${env}${duplicate}-${secret} not created`)
                     } else {
