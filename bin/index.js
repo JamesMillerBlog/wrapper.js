@@ -25,25 +25,57 @@ const utils = require('./scripts/utils.js'),
             // ethereum.install();
             next.install();
         } else if(leadCommand == 'finished') {
-
             let secret = subCommand;
             // Check if manually generated secret exists
             if(await utils.secretExists(secret) != false) {
                 const {tf_state_s3_bucket} = await utils.getSecrets(secret);
                 if(tf_state_s3_bucket) {
                     utils.runSyncTerminalCommand(
-                        `aws s3 rm s3://my-wrapperjs-config.minimiller.digital --recursive`
+                        `aws s3 rm s3://${tf_state_s3_bucket} --recursive`
                     );
     
                     utils.runSyncTerminalCommand(
-                        `aws s3api delete-bucket --bucket my-wrapperjs-config.minimiller.digital`
+                        `aws s3api delete-bucket --bucket ${tf_state_s3_bucket}`
                     );
                 }
                 utils.runSyncTerminalCommand(
                     `aws secretsmanager delete-secret --secret-id ${secret} --force-delete-without-recovery`
                 );
+            } else {
+                if(await utils.secretExists(`${env}${pr}-${secret}`) == false) {
+                    throw new Error(`secret ${secret} does not exist`)
+                }
             }
+        } else if(leadCommand == 'duplicate') {
+            let secret = subCommand;
+            const duplicate = (process.argv[4]) ? process.argv[4] : null;
 
+            // Check if manually generated secret exists
+            if(await utils.secretExists(secret) != false) {
+                const secrets = await utils.getSecrets(secret);
+                if(duplicate) {
+                    let env = '';
+                    if(typeof(parseInt(duplicate))== 'number') {
+                        env = 'pr-'
+                    }
+                    const prSecret = secrets;
+                    prSecret.tf_sls_service_name = `${env}${duplicate}-${secrets.tf_sls_service_name}`
+                    prSecret.tf_sls_next_stage = `${env}${duplicate}`;
+                    prSecret.tf_sls_next_domain_name = `${env}${duplicate}.${secrets.tf_sls_next_root_domain_name}`
+                    prSecret.tf_state_s3_bucket = `${env}${duplicate}-${secrets.tf_state_s3_bucket}`
+                    utils.runSyncTerminalCommand(
+                        `aws secretsmanager create-secret --name ${env}${duplicate}-${secret} --secret-string ${JSON.stringify(JSON.stringify(prSecret))}`
+                    );
+                    if(await utils.secretExists(`${env}${duplicate}-${secret}`) == false) {
+                        throw new Error(`new secret ${env}${duplicate}-${secret} not created`)
+                    } else {
+                        console.log(`secret ${env}${duplicate}-${secret} has been created`)
+                    }
+                    
+                }
+            } else {
+                throw new Error(`secret ${secret} does not exist`)
+            }
         } else {
             if(leadCommand == 'secrets') { 
                 let secret = subCommand;
@@ -70,6 +102,8 @@ const utils = require('./scripts/utils.js'),
                     catch (e) {
                         throw new Error(e)
                     }
+                } else {
+                    throw new Error(`secret ${secret} does not exist`)
                 }
             } else if(leadCommand == 'terraform' || leadCommand == 'tf') {
                 const envVars = JSON.parse(fs.readFileSync('./devops/terraform/terraform.tfvars.json', 'utf8'));

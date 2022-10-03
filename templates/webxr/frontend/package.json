@@ -15,7 +15,6 @@
     "aws-amplify": "^4.3.30",
     "axios": "^0.27.2",
     "camera-controls": "^1.36.1",
-    "fs": "^0.0.1-security",
     "gltf-pipeline": "^3.0.5",
     "http-proxy": "^1.18.1",
     "https": "^1.0.0",

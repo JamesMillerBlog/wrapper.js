@@ -110,7 +110,7 @@ export const secretsFileQuestion = async() => {
   const configuration_name_prompt = {
     name: 'configuration_name',
     message: 'Enter a name for your wrapper configuration, this will set: the name of your secret, service for Serverless Framework and the Terraform generated secrets name.',
-    default: 'my-wrapperjs-config',
+    default: 'wrapperjs',
     validate
   };  
 
@@ -145,7 +145,7 @@ export const secretsFileQuestion = async() => {
   const s3_bucket_prompt = {
     name: 's3_bucket',
     message: "Enter the name of the s3 bucket you'd like Wrapper.js to create for your terraform state file.",
-    default: "my-wrapperjs-config.jamesmiller.blog",
+    default: "wrapperjs.jamesmiller.blog",
     validate: validateNotJMB
   };
 
