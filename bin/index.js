@@ -64,9 +64,6 @@ const utils = require('./scripts/utils.js'),
                     prSecret.tf_sls_next_domain_name = `${env}${duplicate}.${secrets.tf_sls_next_root_domain_name}`
                     prSecret.tf_state_s3_bucket = `${env}${duplicate}-${secrets.tf_state_s3_bucket}`
                     utils.runSyncTerminalCommand(
-                        `aws s3api create-bucket --bucket ${prSecret.tf_state_s3_bucket} --region ${prSecret.region} --create-bucket-configuration LocationConstraint=${prSecret.tf_sls_next_region}`
-                    )
-                    utils.runSyncTerminalCommand(
                         `aws secretsmanager create-secret --name ${env}${duplicate}-${secret} --secret-string ${JSON.stringify(JSON.stringify(prSecret))}`
                     );
                     if(await utils.secretExists(`${env}${duplicate}-${secret}`) == false) {
@@ -74,6 +71,9 @@ const utils = require('./scripts/utils.js'),
                     } else {
                         console.log(`secret ${env}${duplicate}-${secret} has been created`)
                     }
+                    utils.runSyncTerminalCommand(
+                        `aws s3api create-bucket --bucket ${prSecret.tf_state_s3_bucket} --region ${prSecret.region} --create-bucket-configuration LocationConstraint=${prSecret.tf_sls_next_region}`
+                    )
                     
                 }
             } else {
