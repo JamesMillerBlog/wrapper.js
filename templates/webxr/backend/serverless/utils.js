@@ -20,7 +20,7 @@ module.exports = {
             http: [],
             ws: []
         };
-        const http = await module.exports.ls('services/http').catch(console.error);
+        const http = await module.exports.ls('services/http').catch((e)=>console.error(e));
         // const ws = await module.exports.ls('services/ws').catch(console.error);
         const ws = ['ws'];
         // loop through all services except for socket
@@ -153,15 +153,15 @@ module.exports = {
         // wsserver.listen(wsPort);
     },
     deploy: async() => {
-        const http = await module.exports.ls('services/http').catch(console.error);
+        const http = await module.exports.ls('services/http').catch((e)=>console.error(e));
         // const ws = await module.exports.ls('services/ws').catch(console.error);;
         module.exports.deployServices(http, 'http');
         module.exports.deployServices(['ws'], 'ws');
     },
 
     remove: async() => {     
-        const http = await module.exports.ls('services/http').catch(console.error);
-        const ws = await module.exports.ls('services/ws').catch(console.error);
+        const http = await module.exports.ls('services/http').catch((e)=>console.error(e));
+        const ws = await module.exports.ls('services/ws').catch((e)=>console.error(e));
         
         module.exports.removeServices(http, 'http');
         module.exports.removeServices(ws, 'ws');
