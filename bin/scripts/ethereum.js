@@ -1,24 +1,26 @@
-const utils = require('./utils.js'),
-    fs = require('fs');
+const utils = require("./utils.js"),
+  fs = require("fs");
 
 module.exports = {
+  // **************************
+  //       GENERATE ENV
+  // **************************
 
-    // **************************
-    //       GENERATE ENV
-    // **************************
-    
-    generateEnv: (manuallyCreatedSecrets, terraformGeneratedSecrets) => {
-        const deploymentData = { ...terraformGeneratedSecrets, ...manuallyCreatedSecrets };
-        const rawEthData =  utils.prepData(deploymentData, "eth");
-        const ethData = JSON.parse(rawEthData);
-        const envEthData = `
+  generateEnv: (manuallyCreatedSecrets, terraformGeneratedSecrets) => {
+    const deploymentData = {
+      ...terraformGeneratedSecrets,
+      ...manuallyCreatedSecrets,
+    };
+    const rawEthData = utils.prepData(deploymentData, "eth");
+    const ethData = JSON.parse(rawEthData);
+    const envEthData = `
 # The ID of Ethereum Network
 NETWORK_ID=${ethData.chain_network_id}
 
 # The password to create and access the primary account
 ACCOUNT_PASSWORD=${ethData.chain_account_password}
-        `
-        const genesisData = `
+        `;
+    const genesisData = `
 {
     "config": {
         "chainId": ${ethData.chain_network_id},
@@ -35,48 +37,48 @@ ACCOUNT_PASSWORD=${ethData.chain_account_password}
     "gasLimit": "12000000",
     "alloc": {}
 }
-        `
-        try {
-            fs.writeFileSync('./backend/ethereum/eth.env.json', rawEthData);
-            fs.writeFileSync('./backend/ethereum/blockchain/.env', envEthData);
-            fs.writeFileSync('./backend/ethereum/blockchain/genesis.json', genesisData);
-            console.log('ETH ENV file updated');
-        } catch (err) {
-            console.log(err);
-        }
-    },
-
-    install: () => {
-        utils.runAsyncTerminalCommand(
-            `cd ./backend/ethereum && npm install`
-        );
-    },
-    
-    dev: () => {
-        utils.runAsyncTerminalCommand(
-            `cd backend/ethereum && npm install && npx hardhat node`
-        );
-        utils.runAsyncTerminalCommand(
-            `cd backend/ethereum && npm install && npx hardhat compile && npx hardhat run scripts/deploy.js --network localhost`
-        );
-    },
-
-    // **************************
-    //       DEPLOY LAMBDAS
-    // **************************
-    
-    deploy: (envVars) => {
-        utils.runAsyncTerminalCommand(
-            `cd backend/ethereum && npx hardhat compile && npx hardhat run scripts/deploy.js --network ${envVars.stage}`
-        );
-    },
-
-
-    // **************************
-    //    DESTROY ENVIRONMENT
-    // **************************
-
-    remove: () => {  
-       
+        `;
+    try {
+      fs.writeFileSync("./backend/ethereum/eth.env.json", rawEthData);
+      fs.writeFileSync("./backend/ethereum/blockchain/.env", envEthData);
+      fs.writeFileSync(
+        "./backend/ethereum/blockchain/genesis.json",
+        genesisData
+      );
+      console.log("ETH ENV file updated");
+    } catch (err) {
+      console.log(err);
     }
-}
+  },
+
+  install: () => {
+    console.log("Installing Ethereum dependencies");
+    utils.runAsyncTerminalCommand(`cd ./backend/ethereum && npm install`);
+  },
+
+  dev: () => {
+    console.log("Running Eth in dev");
+    utils.runAsyncTerminalCommand(
+      `cd backend/ethereum && npm install && npx hardhat node --hostname 0.0.0.0`
+    );
+    utils.runAsyncTerminalCommand(
+      `cd backend/ethereum && npm install && npx hardhat compile && npx hardhat run scripts/deploy.js --network localhost`
+    );
+  },
+
+  // **************************
+  //       DEPLOY LAMBDAS
+  // **************************
+
+  deploy: (envVars) => {
+    utils.runAsyncTerminalCommand(
+      `cd backend/ethereum && npx hardhat compile && npx hardhat run scripts/deploy.js --network ${envVars.stage}`
+    );
+  },
+
+  // **************************
+  //    DESTROY ENVIRONMENT
+  // **************************
+
+  remove: () => {},
+};

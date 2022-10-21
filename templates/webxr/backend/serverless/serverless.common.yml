@@ -38,16 +38,14 @@ provider:
             - "arn:aws:execute-api:*:*:**/@connections/*"
 
 custom:
-  apiAuthorizer: 
-    id : ${file(./../../../serverless.env.json):cognito_authorizer}
+  apiAuthorizer:
+    id: ${file(./../../../serverless.env.json):cognito_authorizer}
   serverless-offline:
-    host: '0.0.0.0'
+    host: "0.0.0.0"
     httpsProtocol: ./../../../cert
-    
-
 # lambdaPolicyXRay:
-  # Effect: Allow
-  # Action:
-  #   - xray:PutTraceSegments
-  #   - xray:PutTelemetryRecords
-  # Resource: "*"
+# Effect: Allow
+# Action:
+#   - xray:PutTraceSegments
+#   - xray:PutTelemetryRecords
+# Resource: "*"
