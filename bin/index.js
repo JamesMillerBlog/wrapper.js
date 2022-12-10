@@ -16,7 +16,9 @@ const utils = require("./scripts/utils.js"),
     const leadCommand = process.argv[2];
     const subCommand = process.argv[3] ? process.argv[3] : null;
     if (leadCommand == "dev") {
-      serverless.dev();
+      if (fs.existsSync("./backend/serverless")) {
+        serverless.dev();
+      }
       if (fs.existsSync("./backend/ethereum")) {
         ethereum.dev();
       }
@@ -104,18 +106,24 @@ const utils = require("./scripts/utils.js"),
               tf_sls_service_name &&
               (await utils.secretExists(`${tf_sls_service_name}-tf`)) != false
             ) {
-              // generate ENV files for next & sls frameworks
-              const terraformGeneratedSecrets = await utils.getSecrets(
-                `${tf_sls_service_name}-tf`
-              );
-              next.generateEnv(
-                manuallyCreatedSecrets,
-                terraformGeneratedSecrets
-              );
-              serverless.generateEnv(
-                manuallyCreatedSecrets,
-                terraformGeneratedSecrets
-              );
+              if (fs.existsSync("./devops/terraform")) {
+                // generate ENV files for next & sls frameworks
+                const terraformGeneratedSecrets = await utils.getSecrets(
+                  `${tf_sls_service_name}-tf`
+                );
+              }
+              if (fs.existsSync("./frontend")) {
+                next.generateEnv(
+                  manuallyCreatedSecrets,
+                  terraformGeneratedSecrets
+                );
+              }
+              if (fs.existsSync("./backend/serverless")) {
+                serverless.generateEnv(
+                  manuallyCreatedSecrets,
+                  terraformGeneratedSecrets
+                );
+              }
               if (fs.existsSync("./backend/ethereum")) {
                 ethereum.generateEnv(
                   manuallyCreatedSecrets,
@@ -138,31 +146,35 @@ const utils = require("./scripts/utils.js"),
           throw new Error(`secret ${secret} does not exist`);
         }
       } else if (leadCommand == "terraform" || leadCommand == "tf") {
-        const envVars = JSON.parse(
-          fs.readFileSync("./devops/terraform/terraform.tfvars.json", "utf8")
-        );
-        if (subCommand == "init") {
-          // create terraform environment
-          terraform.init(envVars);
-        } else if (subCommand == "plan") {
-          // plan terraform
-          terraform.plan();
-        } else if (subCommand == "apply") {
-          // build and deploy app
-          terraform.apply();
-        } else if (subCommand == "destroy") {
-          // destroy app
-          terraform.destroy(envVars);
+        if (fs.existsSync("./devops/terraform")) {
+          const envVars = JSON.parse(
+            fs.readFileSync("./devops/terraform/terraform.tfvars.json", "utf8")
+          );
+          if (subCommand == "init") {
+            // create terraform environment
+            terraform.init(envVars);
+          } else if (subCommand == "plan") {
+            // plan terraform
+            terraform.plan();
+          } else if (subCommand == "apply") {
+            // build and deploy app
+            terraform.apply();
+          } else if (subCommand == "destroy") {
+            // destroy app
+            terraform.destroy(envVars);
+          }
         }
       } else if ((leadCommand == "serverless") | (leadCommand == "sls")) {
-        if (subCommand == "deploy") {
-          // build and deploy back end
-          serverless.deploy();
-        } else if (subCommand == "remove") {
-          // build and deploy back end
-          serverless.remove();
+        if (fs.existsSync("./backend/serverless")) {
+          if (subCommand == "deploy") {
+            // build and deploy back end
+            serverless.deploy();
+          } else if (subCommand == "remove") {
+            // build and deploy back end
+            serverless.remove();
+          }
         }
-      } else if (leadCommand == "eth") {
+      } else if (leadCommand == "eth" && fs.existsSync("./backend/ethereum")) {
         if (subCommand == "deploy") {
           // build and deploy eth
           const envVars = JSON.parse(
@@ -170,7 +182,7 @@ const utils = require("./scripts/utils.js"),
           );
           ethereum.deploy(envVars);
         }
-      } else if (leadCommand == "next") {
+      } else if (leadCommand == "next" && fs.existsSync("./frontend")) {
         if (subCommand == "export") {
           // build and deploy app
           const envVars = JSON.parse(
