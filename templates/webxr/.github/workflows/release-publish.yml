@@ -12,6 +12,8 @@ jobs:
         with:
           node-version: latest
       - uses: hashicorp/setup-terraform@v2
+      - name: Install Serverless Framework
+        run: npm install -g serverless
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -32,3 +34,5 @@ jobs:
         run: gobble secrets ${{ secrets.WRAPPERJS_SECRET_NAME }}
       - name: Deploy Front End
         run: gobble next export
+      - name: Deploy Back End
+        run: gobble sls deploy

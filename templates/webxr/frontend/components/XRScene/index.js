@@ -1,45 +1,70 @@
-import React, { useRef, useState, useEffect, Suspense, lazy } from 'react'
-import RenderWeb from './RenderWeb';
-import RenderAR from './RenderAR';
-import RenderVR from './RenderVR';
-import deviceStore from '../../stores/device';
-import Sockets from './../Sockets';
+import React, { useState, useEffect } from "react";
+import { ARButton, Controllers, VRButton, XR } from "@react-three/xr";
+import deviceStore from "../../stores/device";
+import Sockets from "./../Sockets";
+import { Canvas } from "@react-three/fiber";
+import Avatars from "./Avatars";
+import KeyboardControls from "./KeyboardControls";
+import Camera from "./Camera";
 
 export default function XRScene(props) {
   const { children } = props;
   const { device, setDevice } = deviceStore();
+
   useEffect(() => {
-    const fetchData = async() => setDevice(await checkDevice())
+    const fetchData = async () => setDevice(await checkDevice());
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   return (
     <Sockets>
-      {device != undefined && device == 'webAR' &&  
-        <RenderAR>
-          {children}
-        </RenderAR>
-      }
-      {device != undefined && device == 'webVR' &&  
-        <RenderVR>
-          {children}
-        </RenderVR>
-      }
-      {device != undefined && device == 'web' &&  
-        <RenderWeb>
-          {children}
-        </RenderWeb>
-      }
+      {device != undefined && device == "webAR" && <ARButton />}
+      {device != undefined && device == "webVR" && <VRButton />}
+      <Canvas
+        style={{
+          height: "100vh",
+          width: "100vw",
+        }}
+      >
+        <XR referenceSpace="local">
+          <Avatars />
+          {device != undefined && device == "web" && (
+            <>
+              <KeyboardControls>
+                <Camera
+                  fov={65}
+                  aspect={window.innerWidth / window.innerHeight}
+                  radius={1000}
+                />
+              </KeyboardControls>
+              {children}
+            </>
+          )}
+          {device != undefined && device !== "web" && (
+            <>
+              <Controllers />
+              <Camera
+                fov={65}
+                aspect={window.innerWidth / window.innerHeight}
+                radius={1000}
+                posCorrection={device === "webAR" ? 0 : 1.2}
+              />
+              {children}
+            </>
+          )}
+        </XR>
+      </Canvas>
     </Sockets>
-  )
+  );
 }
 
-const checkDevice = async() => {
-  if(navigator.xr == undefined) return 'web'
-  let isAR = await navigator.xr.isSessionSupported( 'immersive-ar');
-  if(isAR) return 'webAR';
-  let isVR = await navigator.xr.isSessionSupported( 'immersive-vr');
-  if(isVR) return 'webVR';
-  return 'web'
-}
+const checkDevice = async () => {
+  if (await navigator.xr.isSessionSupported("immersive-ar")) {
+    return "webAR";
+  }
+  if (await navigator.xr.isSessionSupported("immersive-vr")) {
+    return "webVR";
+  }
+  return "web";
+};
