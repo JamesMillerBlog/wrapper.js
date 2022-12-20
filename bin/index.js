@@ -66,7 +66,10 @@ const utils = require("./scripts/utils.js"),
             env = "pr-";
           }
           const prSecret = secrets;
-          prSecret.tf_sls_service_name = `${env}${duplicate}-${secrets.tf_sls_service_name}`;
+          const serviceName = prSecret.tf_sls_service_name
+            ? prSecret.tf_sls_service_name
+            : prSecret.eth_tf_sls_service_name;
+          serviceName = `${env}${duplicate}-${secrets.tf_sls_service_name}`;
           prSecret.tf_sls_next_stage = `${env}${duplicate}`;
           prSecret.tf_sls_next_domain_name = `${env}${duplicate}.${secrets.tf_sls_next_root_domain_name}`;
           prSecret.tf_state_s3_bucket = `${env}${duplicate}-${secrets.tf_state_s3_bucket}`;
@@ -100,18 +103,19 @@ const utils = require("./scripts/utils.js"),
             // generate ENV files for terraform frameworks
             const manuallyCreatedSecrets = await utils.getSecrets(secret);
             terraform.generateEnv(manuallyCreatedSecrets);
-            const { tf_sls_service_name } = manuallyCreatedSecrets;
+            const serviceName = manuallyCreatedSecrets.tf_sls_service_name
+              ? manuallyCreatedSecrets.tf_sls_service_name
+              : manuallyCreatedSecrets.eth_tf_sls_service_name;
             // check if terraform generated secrets exist
             if (
-              tf_sls_service_name &&
-              (await utils.secretExists(`${tf_sls_service_name}-tf`)) != false
+              serviceName &&
+              (await utils.secretExists(`${serviceName}-tf`)) != false
             ) {
-              if (fs.existsSync("./devops/terraform")) {
-                // generate ENV files for next & sls frameworks
-                const terraformGeneratedSecrets = await utils.getSecrets(
-                  `${tf_sls_service_name}-tf`
-                );
-              }
+              // generate ENV files for next & sls frameworks
+              const terraformGeneratedSecrets = await utils.getSecrets(
+                `${serviceName}-tf`
+              );
+
               if (fs.existsSync("./frontend")) {
                 next.generateEnv(
                   manuallyCreatedSecrets,

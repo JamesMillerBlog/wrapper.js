@@ -45,7 +45,7 @@ ACCOUNT_PASSWORD=${ethData.chain_account_password}
         "./backend/ethereum/blockchain/genesis.json",
         genesisData
       );
-      console.log("ETH ENV file updated");
+      console.log("Created ETH ENV file");
     } catch (err) {
       console.log(err);
     }
@@ -72,7 +72,7 @@ ACCOUNT_PASSWORD=${ethData.chain_account_password}
 
   deploy: (envVars) => {
     utils.runAsyncTerminalCommand(
-      `cd backend/ethereum && npx hardhat compile && npx hardhat run scripts/deploy.js --network ${envVars.stage}`
+      `cd backend/ethereum && npx hardhat compile && npx hardhat run scripts/deploy.js --network ${envVars.network}`
     );
   },
 
