@@ -1,0 +1,109 @@
+{
+    "vin": "AU79000001AF00004",
+    "updateTime": "2021-10-25T13:15:46.845Z",
+    "metrics": {
+      "diagnosticTroubleCodes": [
+        {
+          "updateTime": "2021-10-12T20:37:14Z",
+          "value": {
+            "system": "NETWORK",
+            "sae": true,
+            "intFault": 0,
+            "subfaultFailureInt": 0,
+            "rawValue": "U0100",
+            "oemData": [
+              {
+                "key": "ecuStatus",
+                "value": "GGDS"
+              },
+              {
+                "key": "reportingEcu",
+                "value": "2020"
+              },
+              {
+                "key": "dtcStatus",
+                "value": "40"
+              }
+            ]
+          }
+        }
+      ],
+      "ignitionStatus": {
+        "updateTime": "2021-10-25T13:15:46.845Z",
+        "value": "ON"
+      },
+      "tirePressureStatus": [
+        {
+          "updateTime": "2021-10-25T13:15:46.845Z",
+          "value": "ALERT",
+          "vehicleWheel": "FRONT_LEFT"
+        },
+        {
+          "updateTime": "2021-10-25T13:15:46.845Z",
+          "value": "NORMAL",
+          "vehicleWheel": "FRONT_RIGHT"
+        },
+        {
+          "updateTime": "2021-10-25T13:15:46.845Z",
+          "value": "NORMAL",
+          "vehicleWheel": "REAR_LEFT"
+        },
+        {
+          "updateTime": "2021-10-25T13:15:46.845Z",
+          "value": "NORMAL",
+          "vehicleWheel": "REAR_RIGHT"
+        }
+      ],
+      "tirePressure": [
+        {
+          "updateTime": "2021-10-25T13:15:46.845Z",
+          "value": 7,
+          "vehicleWheel": "FRONT_LEFT",
+          "wheelPlacardFront": 12
+        },
+        {
+          "updateTime": "2021-10-25T13:15:46.845Z",
+          "value": 0,
+          "vehicleWheel": "FRONT_RIGHT",
+          "wheelPlacardFront": 12
+        },
+        {
+          "updateTime": "2021-10-25T13:15:46.845Z",
+          "value": 0,
+          "vehicleWheel": "REAR_LEFT",
+          "wheelPlacardRear": 11
+        },
+        {
+          "updateTime": "2021-10-25T13:15:46.845Z",
+          "value": 0,
+          "vehicleWheel": "REAR_RIGHT",
+          "wheelPlacardRear": 11
+        }
+      ],
+      "position": {
+        "updateTime": "2021-10-25T13:15:46.845Z",
+        "value": {
+          "location": {
+            "lat": 42.3145841,
+            "lon": -83.2106655,
+            "alt": 0
+          },
+          "gpsDimension": "DIM_3D",
+          "gpsCoordinateMethod": "ACTUAL",
+          "gpsClock": "2021-10-25T13:15:46.845Z",
+          "pdop": 1,
+          "hdop": 0,
+          "vdop": 0,
+          "gdop": 0
+        }
+      },
+      "oilLifeRemaining": {
+        "updateTime": "2021-10-25T13:15:46.845Z",
+        "value": 13
+      },
+      "odometer": {
+        "updateTime": "2021-10-25T13:15:46.845Z",
+        "value": 0
+      }
+    }
+  }
