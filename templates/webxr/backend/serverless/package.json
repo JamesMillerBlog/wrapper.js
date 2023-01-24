@@ -16,6 +16,6 @@
     "http-proxy-middleware": "^2.0.6",
     "https": "^1.0.0",
     "node-cmd": "^5.0.0",
-    "serverless": "^2.68.0"
+    "serverless": "^3.26.0"
   }
 }

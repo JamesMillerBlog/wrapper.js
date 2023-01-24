@@ -77,7 +77,6 @@ export const createSecrets = async (options) => {
       s3_key,
       network,
       network_api_url,
-      account_private_key,
       account_address,
     } = secretsFile;
 
@@ -89,11 +88,10 @@ export const createSecrets = async (options) => {
       tf_state_s3_bucket: s3_bucket,
       tf_state_s3_key: s3_key,
     };
-    if (options.template.contains("Eth")) {
+    if (options.template.includes("Eth")) {
       secretsJson.eth_tf_sls_service_name = configuration_name;
       secretsJson.eth_network = network;
       secretsJson.eth_network_api_url = network_api_url;
-      secretsJson.eth_account_private_key = account_private_key;
       secretsJson.eth_account_address = account_address;
     } else {
       secretsJson.tf_sls_service_name = configuration_name;
@@ -191,7 +189,7 @@ export const secretsFileQuestion = async (options) => {
     name: "network",
     message:
       "Enter name of the evm based network you would like to deploy your dApp to.",
-    default: "https://eth-goerli.g.alchemy.com/v2/your-api-key",
+    default: "goerli",
   };
 
   const network_api_url_prompt = {
@@ -200,18 +198,11 @@ export const secretsFileQuestion = async (options) => {
     default: "https://eth-goerli.g.alchemy.com/v2/your-api-key",
   };
 
-  const account_private_key_prompt = {
-    name: "account_private_key",
-    message:
-      "Enter the private key for the account that you will use to pay the fees to deploy your dApp.",
-    default: "0xABCDEFGHIJLMNOPQRSTUVWXYZ",
-  };
-
   const account_address_prompt = {
     name: "account_address",
     message:
       "Enter the address for the account that you will use to pay the fees to deploy your dApp.",
-    default: "0x12345678910",
+    default: "0x123456789E2eb28930eFb4CeF49B2d1F2C9C1199",
   };
 
   const { configuration_name } = await inquirer.prompt(
@@ -232,16 +223,12 @@ export const secretsFileQuestion = async (options) => {
     s3_bucket: s3_bucket,
     s3_key: s3_key,
   };
-  if (options.template.contains("Eth")) {
+  if (options.template.includes("Eth")) {
     const { network } = await inquirer.prompt(network_prompt);
     const { network_api_url } = await inquirer.prompt(network_api_url_prompt);
-    const { account_private_key } = await inquirer.prompt(
-      account_private_key_prompt
-    );
     const { account_address } = await inquirer.prompt(account_address_prompt);
     secretsFile.network = network;
     secretsFile.network_api_url = network_api_url;
-    secretsFile.account_private_key = account_private_key;
     secretsFile.account_address = account_address;
   }
   return {

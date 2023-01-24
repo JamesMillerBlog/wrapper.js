@@ -1,0 +1,16 @@
+connection-socket:
+  handler: connect/index.handler
+  events:
+    - websocket:
+        # route: sockets/test
+        route: $connect
+        # authorizer:
+        # name: auth # references the auth function below
+        # authorizer:
+        #   name: auth
+        #   arn: arn:aws:cognito-idp:eu-west-2:862352533134:userpool/eu-west-2_hdfdhfJkX
+        #   identitySource:
+        #     - 'route.request.header.Auth'
+        #     - 'route.request.querystring.Auth'
+        # authorizer: ${self:custom.apiAuthorizer}
+# https://nealanalytics.com/blog/how-to-create-a-custom-authorizer-for-aws-api-gateway-using-serverless-lambda-functions-in-node-and-net-core/

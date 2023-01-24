@@ -10,12 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.1004.0",
-    "axios": "^0.22.0",
-    "serverless": "^2.62.0",
-    "twilio": "^3.69.0"
+    "aws-sdk": "^2.1289.0",
+    "axios": "^1.2.2",
+    "serverless": "^3.26.0"
   },
   "devDependencies": {
-    "serverless-offline": "^8.2.0"
+    "serverless-offline": "^12.0.4"
   }
 }
