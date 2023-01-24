@@ -15,7 +15,7 @@ export const templateQuestion = async (options, defaultTemplate) => {
     type: "list",
     name: "template",
     message: "Please choose which project template to use",
-    choices: ["WebXR", "Auth", "Eth-Auth"],
+    choices: ["WebXR", "Auth", "Eth-Auth", "Eth-Metaverse"],
     default: defaultTemplate,
   };
   if (!options.template) {
