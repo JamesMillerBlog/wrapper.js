@@ -16,6 +16,7 @@ module.exports.handler = async (event) => {
   const { nonce, address, signature } = event.body;
   const sigValidated = await validateSig(address, signature, nonce);
   if (sigValidated) {
+    await updateNonce(address, nonce);
     const { IdentityId: identityId, Token: token } = await getIdToken(address);
 
     // console.log("identityId", identityId);
@@ -25,9 +26,6 @@ module.exports.handler = async (event) => {
       identityId,
       token
     );
-
-    // console.log('credentials', credentials);
-    await updateNonce(address, nonce);
 
     return {
       headers,

@@ -1,81 +1,60 @@
-import React, { useState, useEffect } from 'react'
-import socketStore from './../../../stores/socket';
-import Avatar from './Avatar';
-import axios from 'axios';
-import { httpApiURL } from './../../../utils';
-import cognitoStore from './../../../stores/cognito';
+import React, { useState, useEffect } from "react";
+import { useThree, useFrame } from "@react-three/fiber";
+import ActiveUser from "./ActiveUser";
+import cognitoStore from "./../../../stores/cognito";
+import avatarStore from "./../../../stores/avatar";
+import movementStore from "./../../../stores/movement";
+import socketStore from "./../../../stores/socket";
+import { getUserData, requestUserData } from "./utils";
+import AvatarList from "./AvatarList";
 
 const Avatars = () => {
   const { cognito } = cognitoStore();
+  const { userMode, avatar } = avatarStore();
+  const { movement } = movementStore();
+  const [activeUserAvatar, setActiveUserAvatar] = useState();
   const { lastJsonMessage } = socketStore();
-  const [getUserImages, setUserImages] = useState([]);
-  
+  const [httpData, setHttpData] = useState();
+
   useEffect(() => {
-    const fetchData = async() => {
-      let allData = await getUserData(cognito, 'returnAll');
-      let userImages ={};
-      if(allData != undefined) {
-        for(let x = 0; x<allData.Items.length; x++) {
-          userImages[allData.Items[x].username] =allData.Items[x].image
-        }
-      }
-      setUserImages(userImages)
-    }
+    const fetchData = async () => setHttpData(await requestUserData(cognito));
     fetchData();
-  }, [cognito])
+  }, []);
 
-  return (
-    <>
-      {
-        lastJsonMessage != null &&
-        <AvatarList list={lastJsonMessage} cognito={cognito} userImages={getUserImages}/>
-      }
-    </>
-  )
-}
+  useEffect(() => {
+    if (cognito && userMode && httpData) {
+      const activeUserAvatar = {
+        username: cognito.username,
+        image: getUserData(cognito.username, httpData).userImage,
+        avatar,
+        userMode: userMode,
+        movement,
+      };
 
-const AvatarList = (props) => {
-  const { list, cognito, userImages } = props;
-  const avatars = [];
-  for(let x=0; x<list.length; x++) {
-    if(list[x].uid != cognito.username) {
-      if(list[x].type == 'users') {
-        list[x].image = userImages[list[x].uid];
-        avatars.push(list[x]);
-      }
+      setActiveUserAvatar(activeUserAvatar);
     }
-  }
-  
+  }, [cognito, userMode, httpData, avatar]);
+
   return (
     <>
-      {avatars.map(avatar => (
-        <Avatar 
-            position={avatar.data.position}
-            rotation={avatar.data.rotation}
-            key={avatar.uid}
-            image={avatar.image}
-        />
-      ))}
+      <>
+        {lastJsonMessage && lastJsonMessage.length > 0 && httpData && (
+          <AvatarList socketData={lastJsonMessage} httpData={httpData} />
+        )}
+      </>
+      <>
+        {activeUserAvatar != null && (
+          <ActiveUser
+            username={cognito.username}
+            image={activeUserAvatar.image}
+            userMode={activeUserAvatar.userMode}
+            avatar={activeUserAvatar.avatar}
+            movement={activeUserAvatar.movement}
+          />
+        )}
+      </>
     </>
-  )
+  );
 };
 
-const getUserData = (cognito, all) => axios({
-  method: 'post',
-  url: `${httpApiURL}/users/data`,
-  data: {
-    cognito: all
-  },
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${cognito.jwt}`
-  } 
-}).then((res) => {
-  const data = JSON.parse(res.data.body);
-  return data;
-}, (error) => {
-  console.log(error);
-})
-  
-
-  export default Avatars;
+export default Avatars;

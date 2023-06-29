@@ -61,8 +61,11 @@ export const requestAccount = async (setCognito, setSignInState) => {
         web3.utils.sha3(`Welcome message, nonce: ${nonce}`),
         address
       );
-      let signin = await login(nonce, signature, address);
-      const { AccessKeyId, SecretKey, SessionToken, Expiration } = signin;
+      const { AccessKeyId, SecretKey, SessionToken, Expiration } = await login(
+        nonce,
+        signature,
+        address
+      );
       if (AccessKeyId && SecretKey && SessionToken && Expiration) {
         authenticateUser(
           setCognito,

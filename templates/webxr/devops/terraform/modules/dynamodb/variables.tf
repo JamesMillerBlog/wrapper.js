@@ -16,13 +16,13 @@ variable "range_key" {
   default     = null
 }
 
-variable hash_key_type {
+variable "hash_key_type" {
   description = "Name of Hash Key Type"
   type        = string
   default     = null
 }
 
-variable range_key_type {
+variable "range_key_type" {
   description = "Name of Range Key Type"
   type        = string
   default     = null

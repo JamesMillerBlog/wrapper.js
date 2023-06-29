@@ -1,37 +1,84 @@
-import React, { useRef, useState, useEffect, Suspense, lazy } from "react";
-import { useLoader, useFrame, useThree } from "@react-three/fiber";
+import React from "react";
+import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
+import AvatarModel from "./AvatarModel";
+import AvatarImage from "./Image";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
+import { useFBX } from "@react-three/drei";
+import VRAvatarModel from "./VRAvatarModel";
+const defaultPosition = {
+  position: new THREE.Vector3(0, 0, 0),
+  rotation: new THREE.Vector3(0, 0, 0),
+};
 
 const Avatar = (props) => {
-  const { position, rotation, image } = props;
-  const avatarMesh = useRef();
-  let setImage;
-  if (image == undefined) setImage = "jamesmiller.png";
-  else setImage = image;
-  const texture = useLoader(THREE.TextureLoader, `/images/${setImage}`);
+  const body = props.body ? props.body : defaultPosition;
+  const leftHand = props.leftHand ? props.leftHand : defaultPosition;
+  const rightHand = props.rightHand ? props.rightHand : defaultPosition;
 
-  useFrame(() => {
-    if (
-      avatarMesh != undefined &&
-      rotation != undefined &&
-      position != undefined
-    ) {
-      avatarMesh.current.rotation.y = -rotation.y;
-      avatarMesh.current.position.x = position.x;
-      avatarMesh.current.position.y = position.y;
-      avatarMesh.current.position.z = position.z;
-    }
-  });
+  const gltf = LoadModel(props.avatar);
+  const model = gltf.nodes.AvatarRoot ? gltf.nodes : gltf.scene;
+  const animations = loadAnimations(["idle", "run", "jump"]);
 
-  return (
-    <mesh ref={avatarMesh}>
-      <planeGeometry attach="geometry" args={[0.5, 0.5]} />
-      <meshBasicMaterial
-        attach="material"
-        side={THREE.DoubleSide}
-        map={texture}
+  const avatarImageCondition = props.userMode === "image";
+
+  const avatarModelCondition =
+    props.userMode === "avatar" &&
+    props.avatar &&
+    props.movement &&
+    !gltf.nodes.AvatarRoot;
+
+  const vrAvatarModelCondition =
+    props.userMode === "avatar" && gltf.nodes.AvatarRoot && !props.activeUser;
+
+  if (avatarImageCondition) {
+    return (
+      <AvatarImage
+        position={[body.position.x, 0, body.position.z]}
+        rotation={[body.rotation.x, body.rotation.y, body.rotation.z]}
+        image={props.image}
       />
-    </mesh>
-  );
+    );
+  } else if (avatarModelCondition) {
+    return (
+      <AvatarModel
+        model={model}
+        animations={animations}
+        body={body}
+        movement={props.movement}
+      />
+    );
+  } else if (vrAvatarModelCondition) {
+    return (
+      <VRAvatarModel
+        model={model}
+        body={body}
+        leftHand={leftHand}
+        rightHand={rightHand}
+      />
+    );
+  }
 };
+
+const LoadModel = (avatar) => {
+  const { nodes, scene } = useLoader(GLTFLoader, avatar, (loader) => {
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath("/draco/");
+    loader.setDRACOLoader(dracoLoader);
+  });
+  return { nodes, scene };
+};
+
+const loadAnimations = (animationArray) => {
+  const clips = animationArray.map((animation) => {
+    useFBX.preload(`./${animation}.fbx`);
+    const { animations } = useLoader(FBXLoader, `./${animation}.fbx`);
+    animations[0].name = animation;
+    return animations[0];
+  });
+  return clips;
+};
+
 export default Avatar;

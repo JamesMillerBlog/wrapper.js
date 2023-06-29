@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { ARButton, Controllers, VRButton, XR } from "@react-three/xr";
+import React, { useEffect } from "react";
+import { ARButton, Controllers, VRButton } from "@react-three/xr";
 import deviceStore from "../../stores/device";
 import Sockets from "./../Sockets";
 import { Canvas } from "@react-three/fiber";
 import Avatars from "./Avatars";
 import KeyboardControls from "./KeyboardControls";
 import Camera from "./Camera";
+import XR from "./XR";
 
 export default function XRScene(props) {
   const { children } = props;
   const { device, setDevice } = deviceStore();
 
   useEffect(() => {
-    const fetchData = async () => setDevice(await checkDevice());
+    const fetchData = async () => {
+      setDevice(await checkDevice());
+    };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -27,7 +30,7 @@ export default function XRScene(props) {
           width: "100vw",
         }}
       >
-        <XR referenceSpace="local">
+        <XR>
           <Avatars />
           {device != undefined && device == "web" && (
             <>
