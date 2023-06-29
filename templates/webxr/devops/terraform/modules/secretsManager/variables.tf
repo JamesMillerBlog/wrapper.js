@@ -58,6 +58,12 @@ variable "positions_table_id" {
   default     = null
 }
 
+variable "connections_table_id" {
+  description = "Connections DynamoDB Table ID"
+  type        = string
+  default     = null
+}
+
 variable "private_blockchain_ip" {
   description = "Private Blockchain IP"
   type = string

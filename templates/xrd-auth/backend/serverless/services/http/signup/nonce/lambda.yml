@@ -1,0 +1,11 @@
+nonce:
+  handler: nonce/index.handler
+  events:
+    - http:
+        path: signup/nonce
+        method: post
+        integration: lambda
+        cors:
+          origin: '*'
+          headers: # <-- Specify allowed headers
+            - Content-Type

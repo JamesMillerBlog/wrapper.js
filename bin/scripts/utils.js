@@ -43,7 +43,7 @@ module.exports = {
 
     // stream terminal output
     command.stdout.on("data", function (data) {
-      console.log(data);
+      if (data) console.log(data);
     });
 
     command.stdout.on("close", function (data) {

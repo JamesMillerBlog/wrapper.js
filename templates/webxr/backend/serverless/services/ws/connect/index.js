@@ -5,11 +5,12 @@ const AWS = require("aws-sdk");
 const jose = require("node-jose");
 // const fetch = require('node-fetch');
 const axios = require("axios");
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const {
   IS_OFFLINE,
   cognito_user_pool_id,
-  cognito_user_pool_client_id,
+  connections_table_id,
   domain_name,
   region,
   api_local_ip_address,
@@ -20,7 +21,6 @@ const liveUrl = `https://ws.${domain_name}`;
 const socketUrl = IS_OFFLINE ? localUrl : liveUrl;
 
 module.exports.handler = async (event, context, callback) => {
-  console.log("Auth function invoked");
   if (event.queryStringParameters == undefined)
     return context.fail("Unauthorized");
   const keys_url = `https://cognito-idp.${region}.amazonaws.com/${cognito_user_pool_id}/.well-known/jwks.json`;
@@ -69,16 +69,6 @@ module.exports.handler = async (event, context, callback) => {
               } else {
                 return false;
               }
-              // // additionally we can verify the token expiration
-              // const current_ts = Math.floor(new Date() / 1000);
-              // if (current_ts > claims.exp) {
-              //   return context.fail("Token is expired");
-              // }
-              // // and the Audience (use claims.client_id if verifying an access token)
-              // if (claims.aud != app_client_id) {
-              //   return context.fail("Token was not issued for this audience");
-              // }
-              // return context.succeed(generateAllow("me", methodArn));
             })
             .catch((err) => {
               value = false;
@@ -100,10 +90,14 @@ module.exports.handler = async (event, context, callback) => {
   } else {
     let connectionId = event.requestContext.connectionId;
     console.log(`connectionid is the ${connectionId}`);
-    const client = new AWS.ApiGatewayManagementApi({
-      apiVersion: "2018-11-29",
-      endpoint: socketUrl,
-    });
+    const putParams = {
+      Item: {
+        connectionId,
+      },
+      TableName: connections_table_id,
+    };
+
+    await dynamoDb.put(putParams).promise();
     return {
       statusCode: 200,
     };
