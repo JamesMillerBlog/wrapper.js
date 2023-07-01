@@ -3,7 +3,6 @@ service: ${file(./../../../serverless.env.json):service_name}-${file(./../../../
 provider:
   environment: ${file(./../../../serverless.env.json)}
   name: aws
-  lambdaHashingVersion: 20201221
   region: ${file(./../../../serverless.env.json):region}
   runtime: nodejs18.x
   stage: ${file(./../../../serverless.env.json):stage}
