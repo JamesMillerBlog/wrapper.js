@@ -26,12 +26,12 @@ const Avatar = (props) => {
         image={props.image}
       />
     );
-  } else {
+  } else if (props.userMode === "avatar" && props.avatar) {
     const gltf = LoadModel(props.avatar);
     const model = gltf.nodes.AvatarRoot ? gltf.nodes : gltf.scene;
     const animations = loadAnimations(["idle", "run", "jump"]);
 
-    if (props.avatar && props.movement && !gltf.nodes.AvatarRoot) {
+    if (props.movement && !gltf.nodes.AvatarRoot) {
       return (
         <AvatarModel
           model={model}
