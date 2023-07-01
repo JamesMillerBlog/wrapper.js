@@ -18,22 +18,7 @@ const Avatar = (props) => {
   const leftHand = props.leftHand ? props.leftHand : defaultPosition;
   const rightHand = props.rightHand ? props.rightHand : defaultPosition;
 
-  const gltf = LoadModel(props.avatar);
-  const model = gltf.nodes.AvatarRoot ? gltf.nodes : gltf.scene;
-  const animations = loadAnimations(["idle", "run", "jump"]);
-
-  const avatarImageCondition = props.userMode === "image";
-
-  const avatarModelCondition =
-    props.userMode === "avatar" &&
-    props.avatar &&
-    props.movement &&
-    !gltf.nodes.AvatarRoot;
-
-  const vrAvatarModelCondition =
-    props.userMode === "avatar" && gltf.nodes.AvatarRoot && !props.activeUser;
-
-  if (avatarImageCondition) {
+  if (props.userMode === "image") {
     return (
       <AvatarImage
         position={[body.position.x, 0, body.position.z]}
@@ -41,24 +26,30 @@ const Avatar = (props) => {
         image={props.image}
       />
     );
-  } else if (avatarModelCondition) {
-    return (
-      <AvatarModel
-        model={model}
-        animations={animations}
-        body={body}
-        movement={props.movement}
-      />
-    );
-  } else if (vrAvatarModelCondition) {
-    return (
-      <VRAvatarModel
-        model={model}
-        body={body}
-        leftHand={leftHand}
-        rightHand={rightHand}
-      />
-    );
+  } else {
+    const gltf = LoadModel(props.avatar);
+    const model = gltf.nodes.AvatarRoot ? gltf.nodes : gltf.scene;
+    const animations = loadAnimations(["idle", "run", "jump"]);
+
+    if (props.avatar && props.movement && !gltf.nodes.AvatarRoot) {
+      return (
+        <AvatarModel
+          model={model}
+          animations={animations}
+          body={body}
+          movement={props.movement}
+        />
+      );
+    } else if (gltf.nodes.AvatarRoot && !props.activeUser) {
+      return (
+        <VRAvatarModel
+          model={model}
+          body={body}
+          leftHand={leftHand}
+          rightHand={rightHand}
+        />
+      );
+    }
   }
 };
 
