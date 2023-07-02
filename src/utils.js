@@ -78,6 +78,7 @@ export const createSecrets = async (options) => {
       network,
       network_api_url,
       account_address,
+      ready_player_me,
     } = secretsFile;
 
     let secretsJson = {
@@ -94,6 +95,9 @@ export const createSecrets = async (options) => {
       secretsJson.eth_network_api_url = network_api_url;
       secretsJson.eth_account_address = account_address;
     } else {
+      if (options.template.includes("WebXR")) {
+        secretsJson.next_ready_player_me = ready_player_me;
+      }
       secretsJson.tf_sls_service_name = configuration_name;
     }
     let stringifiedJson = JSON.stringify(JSON.stringify(secretsJson));
@@ -205,6 +209,14 @@ export const secretsFileQuestion = async (options) => {
     default: "0x123456789E2eb28930eFb4CeF49B2d1F2C9C1199",
   };
 
+  const ready_player_me_prompt = {
+    name: "ready_player_me",
+    message:
+      "Enter the readyplayer.me subdomain used for creating and retrieving 3D Avatars.",
+    default: "jamesmillerblog",
+    validate: validateNotJMB,
+  };
+
   const { configuration_name } = await inquirer.prompt(
     configuration_name_prompt
   );
@@ -223,7 +235,10 @@ export const secretsFileQuestion = async (options) => {
     s3_bucket: s3_bucket,
     s3_key: s3_key,
   };
-  if (options.template.includes("Eth")) {
+  if (options.template.includes("WebXR")) {
+    const { ready_player_me } = await inquirer.prompt(ready_player_me_prompt);
+    secretsFile.ready_player_me = ready_player_me;
+  } else if (options.template.includes("Eth")) {
     const { network } = await inquirer.prompt(network_prompt);
     const { network_api_url } = await inquirer.prompt(network_api_url_prompt);
     const { account_address } = await inquirer.prompt(account_address_prompt);
@@ -246,7 +261,7 @@ const validate = (input) => {
 };
 
 const validateNotJMB = (input) => {
-  if (input.includes("jamesmiller.blog")) {
+  if (input.includes("jamesmiller.blog") || input.includes("jamesmillerblog")) {
     // Pass the return value in the done callback
     console.log(
       `You can't use the example of ${input}, this was just to help you understand how to enter your own configuration`

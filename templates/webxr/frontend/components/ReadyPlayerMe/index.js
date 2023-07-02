@@ -1,18 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import avatarStore from "./../../stores/avatar";
-import deviceStore from "../../stores/device";
 
 export default function RpmPopUp() {
-  const subdomain = "james-miller-blog";
   const iFrameRef = useRef(null);
   const { setAvatar, setUserMode, showIFrame, setShowIFrame } = avatarStore();
-  const { device } = deviceStore();
 
   useEffect(() => {
     let iFrame = iFrameRef.current;
-    if (iFrame) {
-      iFrame.src = `https://${subdomain}.readyplayer.me/avatar?frameApi`;
+    if (iFrame && process.env.ready_player_me) {
+      iFrame.src = `https://${process.env.ready_player_me}.readyplayer.me/avatar?frameApi`;
     }
   });
 
