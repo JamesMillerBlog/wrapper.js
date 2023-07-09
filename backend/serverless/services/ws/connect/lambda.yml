@@ -1,0 +1,5 @@
+connection-socket:
+  handler: connect/index.handler
+  events:
+    - websocket:
+        route: $connect
