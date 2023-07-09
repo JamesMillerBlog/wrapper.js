@@ -1,0 +1,23 @@
+{
+  "name": "eth-auth-frontend",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && next export",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "aws4fetch": "^1.0.17",
+    "axios": "^1.2.2",
+    "ethers": "^5.7.2",
+    "next": "^13.1.1",
+    "react-use-websocket": "^4.2.0",
+    "styled-components": "^5.3.6",
+    "web3": "^1.8.1",
+    "zustand": "^4.1.5"
+  },
+  "devDependencies": {
+    "eslint": "^8.30.0"
+  }
+}

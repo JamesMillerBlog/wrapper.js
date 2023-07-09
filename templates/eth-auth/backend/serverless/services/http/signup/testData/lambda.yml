@@ -1,0 +1,8 @@
+testData:
+  handler: testData/index.handler
+  events:
+    - http:
+        path: signup/testData
+        method: get
+        authorizer: aws_iam
+        cors: true
