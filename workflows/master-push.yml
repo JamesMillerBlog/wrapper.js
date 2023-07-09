@@ -1,0 +1,62 @@
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate_secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Install Wrapper.js
+        run: npm install -g jamesmillerblog/wrapper.js
+      - name: Check Dev Secret Exists / Create Dev Secret
+        run: gobble duplicate ${{ secrets.WRAPPERJS_SECRET_NAME }} dev || true
+  deploy:
+    runs-on: ubuntu-latest
+    needs: generate_secrets
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Install Wrapper.js
+        run: npm install -g jamesmillerblog/wrapper.js
+      - name: Check Dev Secret Exists / Create Dev Secret
+        run: gobble secrets dev-${{ secrets.WRAPPERJS_SECRET_NAME }}
+      - uses: hashicorp/setup-terraform@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Install Wrapper.js
+        run: npm install -g jamesmillerblog/wrapper.js
+      - name: Retrieve Environment Secrets
+        run: gobble secrets dev-${{ secrets.WRAPPERJS_SECRET_NAME }}
+      - name: Terraform Init
+        run: gobble tf init
+      - name: Terraform Plan
+        run: gobble tf plan
+      - name: Terraform Apply
+        run: gobble tf apply
+      - name: Retrieve Terraform Generated Secrets
+        run: gobble secrets dev-${{ secrets.WRAPPERJS_SECRET_NAME }}
+      - name: Deploy Front End
+        run: gobble next export

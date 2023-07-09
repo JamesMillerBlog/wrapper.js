@@ -1,0 +1,16 @@
+service: ${file(./../../../serverless.common.yml):service}-${self:custom.service}
+useDotenv: true
+
+provider: ${self:custom.common.provider}
+
+functions:
+  - ${file(userData/lambda.yml)}
+
+plugins:
+  - serverless-offline
+  
+custom:
+  service: users-service
+  common: ${file(./../../../serverless.common.yml)}
+  apiAuthorizer: ${self:custom.common.custom.apiAuthorizer.id}
+  serverless-offline: ${self:custom.common.custom.serverless-offline}
