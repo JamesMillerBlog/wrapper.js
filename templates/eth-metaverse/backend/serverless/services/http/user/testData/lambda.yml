@@ -1,0 +1,8 @@
+testData:
+  handler: testData/index.handler
+  events:
+    - http:
+        path: user/testData
+        method: post
+        authorizer: aws_iam
+        cors: true

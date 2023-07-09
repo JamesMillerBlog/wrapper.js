@@ -1,0 +1,61 @@
+service: ${file(./../../serverless.env.json):service_name}-${file(./../../serverless.env.json):stage}-${self:custom.service}
+useDotenv: true
+
+provider:
+  environment: ${file(./../../serverless.env.json)}
+  name: aws
+  region: ${file(./../../serverless.env.json):region}
+  runtime: nodejs12.x
+  stage: ${file(./../../serverless.env.json):stage}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - cognito-identity:*,
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - "execute-api:ManageConnections"
+          Resource:
+            - "arn:aws:execute-api:*:*:**/@connections/*"
+        - Effect: Allow
+          Action:
+            - "execute-api:ManageConnections"
+          Resource:
+            - "arn:aws:execute-api:*:*:**/@connections/*"
+        - Effect: Allow
+          Action:
+            - sts:GetAccessKeyInfo
+          Resource: "*"
+  websocketsApiRouteSelectionExpression: $request.body.action
+
+functions:
+  - ${file(default/lambda.yml)}
+  - ${file(connect/lambda.yml)}
+  - ${file(positions/lambda.yml)}
+
+plugins:
+  - serverless-offline
+  - serverless-domain-manager
+
+custom:
+  service: sockets
+  serverless-offline:
+    host: "0.0.0.0"
+  customDomain:
+    websocket:
+      domainName: ws.${file(./../../serverless.env.json):domain_name}
+      stage: ${file(./../../serverless.env.json):stage}
+      basePath: ""
+      certificateName: "ws.${file(./../../serverless.env.json):domain_name}"
+      createRoute53Record: true
+      endpointType: "regional"
+      enabled: true
+      securityPolicy: tls_1_2
