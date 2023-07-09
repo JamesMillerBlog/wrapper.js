@@ -1,0 +1,11 @@
+signup:
+  handler: signup/index.handler
+  events:
+    - http:
+        path: user/signup
+        method: post
+        integration: lambda
+        cors:
+          origin: "*"
+          headers: # <-- Specify allowed headers
+            - Content-Type

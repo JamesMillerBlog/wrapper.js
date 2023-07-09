@@ -1,0 +1,11 @@
+login:
+  handler: login/index.handler
+  events:
+    - http:
+        path: user/login
+        method: post
+        integration: lambda
+        cors:
+          origin: "*"
+          headers: # <-- Specify allowed headers
+            - Content-Type

@@ -1,0 +1,21 @@
+{
+  "name": "sls-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "remove": "serverless remove"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-iam": "^3.254.0",
+    "node-jose": "^2.0.0",
+    "serverless": "^2.62.0"
+  },
+  "devDependencies": {
+    "serverless-domain-manager": "^5.2.0",
+    "serverless-offline": "^8.2.0"
+  }
+}
