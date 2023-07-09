@@ -1,0 +1,17 @@
+default-socket:
+  handler: default/index.handler
+  events:
+    - websocket:
+        # route: sockets/test
+        route: $default
+        # routeResponseSelec
+        # routeResponseSelectionExpression: $connect
+
+        # wscat -c ws://192.168.1.120:3001/local/sockets/test
+
+# 1. try to use cognito arn for auth
+# 2. create an authorizer for this
+# - websocket:
+#           route: $connect
+#           authorizer:
+#             arn: ${self:provider.environment.authoriserArn} // cognito user pool arn

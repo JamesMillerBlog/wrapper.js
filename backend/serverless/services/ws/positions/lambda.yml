@@ -1,0 +1,5 @@
+positions-socket:
+  handler: positions/index.handler
+  events:
+    - websocket:
+        route: positions
