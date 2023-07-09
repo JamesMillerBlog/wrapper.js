@@ -1,0 +1,33 @@
+{
+  "name": "webxr-frontend",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build && next export",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "devDependencies": {
+    "eslint": "^8.43.0",
+    "eslint-config-next": "^13.4.6"
+  },
+  "dependencies": {
+    "@aws-amplify/ui-react": "^5.0.1",
+    "@react-three/drei": "^9.76.0",
+    "@react-three/fiber": "^8.13.4",
+    "@react-three/xr": "^5.5.0",
+    "aws-amplify": "^5.2.7",
+    "axios": "^1.4.0",
+    "camera-controls": "^2.5.0",
+    "gltf-pipeline": "^4.1.0",
+    "http-proxy": "^1.18.1",
+    "https": "^1.0.0",
+    "next": "^13.4.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-use-websocket": "^4.3.1",
+    "statsvr": "^3.1.4",
+    "styled-components": "^5.0.0",
+    "three": "^0.153.0"
+  }
+}
