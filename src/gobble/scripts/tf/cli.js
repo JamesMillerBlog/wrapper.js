@@ -1,4 +1,4 @@
-const utils = require('./utils.js'),
+const utils = require('../utils.js'),
     fs = require('fs');
 
 
@@ -67,10 +67,6 @@ module.exports = {
         utils.runAsyncTerminalCommand(
             `cd ./devops/terraform && terraform destroy -var-file="terraform.tfvars.json" -auto-approve`
         );
-        
-    //     utils.runSyncTerminalCommand(
-    //         `aws s3 rm s3://${state_s3_bucket} --recursive`
-    //     );
     }
 }
 

@@ -3,7 +3,7 @@
   "version": "0.4.8",
   "description": "A Full Stack Javascript Devops Tool",
   "author": "James Miller <hi@jamesmiller.blog> (https://jamesmiller.blog)",
-  "main": "./bin/index.js",
+  "main": "./bin/index.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/JamesMillerBlog/wrapper.js"
@@ -26,7 +26,7 @@
     "node-cmd": "^4.0.0"
   },
   "bin": {
-    "unwrap": "./src/index.js",
-    "gobble": "./bin/index.js"
+    "unwrap": "node ./src/unwrap/index.js",
+    "gobble": "node ./src/gobble/index.js"
   }
 }

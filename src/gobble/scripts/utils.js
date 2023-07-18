@@ -2,7 +2,6 @@ const cmd = require("node-cmd"),
   AWS = require("aws-sdk"),
   internalIp = require("internal-ip");
 
-// AWS.config.update({region: process.env.AWS_REGION});
 process.env.AWS_SDK_LOAD_CONFIG = 1;
 
 // **************************
@@ -13,7 +12,6 @@ module.exports = {
   // Function to run syncronous terminal commands
   runSyncTerminalCommand: (terminalCommand) => {
     let command = cmd.runSync(terminalCommand);
-    // console.log(`Beginning ${action} a ${environment} app for the ${project} project on behalf of ${client}...`);
     console.log("Started running a command");
     console.log(terminalCommand);
     if (command.err) {
@@ -23,22 +21,13 @@ module.exports = {
       console.log(`Sync stderr: ${command.stderr}`);
       throw new Error(command.stderr);
     }
-
-    console.log(command.data);
   },
   // Function to run asyncronous terminal commands
   runAsyncTerminalCommand: async (terminalCommand) => {
     let command = cmd.run(terminalCommand, function (err, data, stderr) {
       console.log("Started running a command");
-      // console.log(`Start ${action} a ${environment} app for the ${project} project on behalf of ${client}...`);
-      if (err) {
-        console.log(err);
-        // throw new Error(err);
-      }
-      if (stderr) {
-        console.log(stderr);
-        // throw new Error(stderr);
-      }
+      if (err) console.error(err);
+      if (stderr) console.error(stderr);
     });
 
     // stream terminal output

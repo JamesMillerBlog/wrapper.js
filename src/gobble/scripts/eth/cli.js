@@ -1,4 +1,4 @@
-const utils = require("./utils.js"),
+const utils = require("../utils.js"),
   fs = require("fs");
 
 module.exports = {
