@@ -13,11 +13,3 @@ module.exports = {
     secretsJson.eth_account_address = account_address;
   }
 }
-
-
-
-
-
-
-
-

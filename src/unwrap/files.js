@@ -1,13 +1,10 @@
-const ncp = require("ncp");
 const path = require("path");
-const fs = require("fs");
-const { promisify } = require("util");
-
-const access = promisify(fs.access);
-
 const cmd = require("node-cmd");
-
+const ncp = require("ncp");
 const copy = promisify(ncp);
+const fs = require("fs");
+const access = promisify(fs.access);
+const { promisify } = require("util");
 
 module.exports = { 
   copyTemplateFiles: async (options) => {
@@ -49,11 +46,3 @@ module.exports = {
     return options;
   }
 }
-
-
-
-
-
-
-
-

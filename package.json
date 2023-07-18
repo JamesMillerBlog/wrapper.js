@@ -3,7 +3,7 @@
   "version": "0.4.8",
   "description": "A Full Stack Javascript Devops Tool",
   "author": "James Miller <hi@jamesmiller.blog> (https://jamesmiller.blog)",
-  "main": "./bin/index.ts",
+  "main": "./bin/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/JamesMillerBlog/wrapper.js"
