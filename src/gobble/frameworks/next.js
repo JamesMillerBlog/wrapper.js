@@ -58,10 +58,8 @@ const dev = () => {
   utils.runAsyncTerminalCommand(`cd ./frontend && npm install && npm run dev`);
 };
 
-const buildAndDeploy = (deploymentData) => {
+const buildAndDeploy = ({ domain_name }) => {
   console.log("Exporting and deploying Next.JS");
-  const { domain_name } = deploymentData;
-  console.log(domain_name);
   utils.runSyncTerminalCommand(`cd frontend && npm install && npm run build`);
   utils.runSyncTerminalCommand(`aws s3 rm --recursive s3://${domain_name}`);
   utils.runAsyncTerminalCommand(
