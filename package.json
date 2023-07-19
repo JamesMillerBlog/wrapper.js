@@ -3,7 +3,6 @@
   "version": "0.4.8",
   "description": "A Full Stack Javascript Devops Tool",
   "author": "James Miller <hi@jamesmiller.blog> (https://jamesmiller.blog)",
-  "main": "./bin/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/JamesMillerBlog/wrapper.js"
@@ -26,7 +25,16 @@
     "node-cmd": "^4.0.0"
   },
   "bin": {
-    "unwrap": "node ./src/unwrap/index.js",
-    "gobble": "node ./src/gobble/index.js"
+    "unwrap": "./src/unwrap/main.js",
+    "gobble": "./src/gobble/main.js"
+  },
+  "devDependencies": {
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-promise": "^6.1.1"
   }
 }

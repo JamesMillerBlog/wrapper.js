@@ -1,10 +1,14 @@
 const fs = require("fs");
-const utils = require("./utils.js");
-const config = require('./../config')
+const { utils } = require("./");
+const config = require("../config.js");
 
-module.exports.install = () => {
+const install = () => {
   utils.install();
   config.forEach((c) => {
-    if(fs.existsSync(c.filepath)) c.cli.install()
+    if (fs.existsSync(c.filepath)) c.cli.install();
   });
+};
+
+module.exports = {
+  install,
 };

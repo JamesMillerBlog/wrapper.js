@@ -1,8 +1,12 @@
 const fs = require("fs");
-const config = require('./../config')
+const config = require("../config");
 
-module.exports.dev = () => {
+const dev = () => {
   config.forEach((c) => {
-    if(fs.existsSync(c.filepath)) c.cli.dev()
+    if (fs.existsSync(c.filepath)) c.cli.dev();
   });
+};
+
+module.exports = {
+  dev,
 };

@@ -1,11 +1,14 @@
 const utils = require("./../utils");
 
-module.exports.duplicate = async(secret, argv) => {
+const duplicate = async (secret, argv) => {
   const duplicate = argv[4] ? argv[4] : null;
   const secretExists = await utils.secretExists(secret);
-  if(!duplicate) throw new Error(`secret ${duplicate} is not valid and cannot be duplicated`);
-  if(!secretExists) throw new Error(`secret ${secret} does not exist`);
-  
+  if (!duplicate)
+    throw new Error(
+      `secret ${duplicate} is not valid and cannot be duplicated`,
+    );
+  if (!secretExists) throw new Error(`secret ${secret} does not exist`);
+
   const secrets = await utils.getSecrets(secret);
   const env = !isNaN(duplicate) ? "pr-" : "";
   const prSecret = secrets;
@@ -14,14 +17,21 @@ module.exports.duplicate = async(secret, argv) => {
   prSecret.tf_state_s3_bucket = `${env}${duplicate}-${secrets.tf_state_s3_bucket}`;
   utils.runSyncTerminalCommand(
     `aws secretsmanager create-secret --name ${env}${duplicate}-${secret} --secret-string ${JSON.stringify(
-      JSON.stringify(prSecret)
-    )}`
+      JSON.stringify(prSecret),
+    )}`,
   );
-  const duplicatedSecretExists = await utils.secretExists(`${env}${duplicate}-${secret}`);
-  if (!duplicatedSecretExists) throw new Error(`new secret ${env}${duplicate}-${secret} not created`);
+  const duplicatedSecretExists = await utils.secretExists(
+    `${env}${duplicate}-${secret}`,
+  );
+  if (!duplicatedSecretExists)
+    throw new Error(`new secret ${env}${duplicate}-${secret} not created`);
   else console.log(`secret ${env}${duplicate}-${secret} has been created`);
-  
+
   utils.runSyncTerminalCommand(
-    `aws s3api create-bucket --bucket ${prSecret.tf_state_s3_bucket} --region ${prSecret.tf_sls_next_region} --create-bucket-configuration LocationConstraint=${prSecret.tf_sls_next_region}`
+    `aws s3api create-bucket --bucket ${prSecret.tf_state_s3_bucket} --region ${prSecret.tf_sls_next_region} --create-bucket-configuration LocationConstraint=${prSecret.tf_sls_next_region}`,
   );
+};
+
+module.exports = {
+  duplicate,
 };
