@@ -12,8 +12,10 @@ const main = async (argv) => {
   const subCommand = argv[3] ? argv[3] : null;
 
   if (leadCommand === "dev") {
+    // todo: retire this function and move to templates package.json
     dev();
   } else if (leadCommand === "install") {
+    // todo: retire this function and move to templates package.json
     install();
   } else if (leadCommand === "finished") {
     await finished();
@@ -22,12 +24,16 @@ const main = async (argv) => {
   } else if (leadCommand === "secrets") {
     await secrets(subCommand);
   } else if (leadCommand === "terraform" || leadCommand === "tf") {
+    // todo: retire this function and move to templates package.json
     terraform.run(subCommand);
   } else if ((leadCommand === "serverless") | (leadCommand === "sls")) {
+    // todo: retire this function and move to templates package.json
     serverless.run(subCommand);
   } else if (leadCommand === "eth") {
+    // todo: retire this function and move to templates package.json
     ethereum.run(subCommand);
   } else if (leadCommand === "next") {
+    // todo: retire this function and move to templates package.json
     next.run(subCommand);
   }
 };
