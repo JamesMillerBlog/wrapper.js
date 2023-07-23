@@ -9,8 +9,9 @@ import * as utils from "../utils";
 import { templates } from "../templates";
 
 const mockCmd = jest.spyOn(cmd, "runSync").mockImplementation(() => ({
-  err: undefined,
-  stderr: undefined,
+  data: "mock",
+  err: null,
+  stderr: null,
 }));
 const mockError = jest.spyOn(utils, "error");
 // eslint-disable-next-line new-cap

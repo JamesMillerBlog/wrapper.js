@@ -9,4 +9,5 @@ export const templates = {
   ethMetaverse,
   webxr,
 };
+
 export * as types from "./types";
