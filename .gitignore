@@ -23,6 +23,9 @@ out/
 #serverless framework articfact files
 .serverless
 
+#jest articfact files
+coverage/
+
 # Compiled Java class files
 *.class
 

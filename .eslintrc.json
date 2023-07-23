@@ -1,0 +1,15 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true,
+        "jest/globals": true
+    },
+    "extends": ["standard", "prettier", "eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:@typescript-eslint/recommended"],
+    "plugins": ["prettier", "jest", "@typescript-eslint"],
+    "parser": "@typescript-eslint/parser",
+    "root": true,
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    }
+}
