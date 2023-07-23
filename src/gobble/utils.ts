@@ -9,37 +9,29 @@ export const runSyncTerminalCommand = (terminalCommand: string) => {
   console.log("Started running a command");
   console.log(terminalCommand);
   if (command.err) error(`Sync Err ${command.err}`);
-  else if (command.stderr) error(`Sync stderr: ${command.stderr}`);
 };
 
 export const runAsyncTerminalCommand = async (terminalCommand: string) => {
-  const command = cmd.run(
-    terminalCommand,
-    function (err: any, data: any, stderr: any) {
-      console.log("Started running a command");
-      if (err) error(err);
-      if (stderr) error(stderr);
-    }
-  );
+  const command = cmd.run(terminalCommand, function (err: string) {
+    console.log("Started running a command");
+    if (err) error(`${err}`);
+  });
 
-  command.stdout.on("data", function (data: any) {
+  command.stdout.on("data", function (data: string) {
     if (data) console.log(data);
   });
 
-  command.stdout.on("close", function (data: any) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  command.stdout.on("close", function (_data: string) {
     console.log("Finished running command");
   });
 };
 
-export const initialConfigPrep = (
-  deploymentData: { [x: string]: any },
-  framework: string
-) => {
+export const initialConfigPrep = (deploymentData: any, framework: string) => {
   const data: any = {};
-
   for (const property in deploymentData) {
     if (property.includes(framework)) {
-      const newKey = property.replace(`${framework}_`, "");
+      const newKey = property.replace(/tf_|sls_|eth_|next_/gi, "");
       data[newKey] = deploymentData[property];
     }
   }
@@ -47,7 +39,7 @@ export const initialConfigPrep = (
   return data;
 };
 
-export const getSecrets = async (secretName: any) => {
+export const getSecrets = async (secretName: string) => {
   const client = new aws.SecretsManager();
   try {
     const data = await client
@@ -61,11 +53,11 @@ export const getSecrets = async (secretName: any) => {
       return data.SecretBinary;
     }
   } catch (err) {
-    error(JSON.stringify(err));
+    throw new Error(String(err));
   }
 };
 
-export const secretExists = async (secretName: any) => {
+export const secretExists = async (secretName: string) => {
   try {
     await getSecrets(secretName);
     return true;

@@ -45,7 +45,11 @@ exports.default = (secret) => __awaiter(void 0, void 0, void 0, function* () {
         utils.error(`secret ${secret} does not exist`);
     }
     try {
+        console.log("ATTEMPTING");
+        console.log(secret);
         const secrets = yield utils.getSecrets(secret);
+        console.log("GOT IT");
+        console.log(secrets);
         frameworks_1.terraform.generateEnv(secrets);
         const serviceName = secrets.tf_sls_service_name
             ? secrets.tf_sls_service_name

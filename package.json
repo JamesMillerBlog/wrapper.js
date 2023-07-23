@@ -1,6 +1,6 @@
 {
   "name": "@jamesmillerblog/wrapper.js",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "description": "A Full Stack Javascript Devops Tool",
   "author": "James Miller <hi@jamesmiller.blog> (https://jamesmiller.blog)",
   "repository": {
@@ -11,7 +11,8 @@
     "test": "jest",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
-    "build": "tsc"
+    "build": "tsc",
+    "local-build": "npm run build && npm install -g ."
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

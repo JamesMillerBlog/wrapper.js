@@ -59,7 +59,6 @@ const templateQuestion = (options, defaultTemplate = "WebXR") => __awaiter(void 
     };
     if (choices.includes(options.template))
         return options.template;
-    console.log("Template does not exist, please choose from one of the below.");
     const { template } = yield inquirer_1.default.prompt(prompt);
     return String(template);
 });

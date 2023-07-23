@@ -6,31 +6,59 @@ import { error } from "./utils";
 
 config();
 
+export enum LeadCommand {
+  DEV = "dev",
+  FINISHED = "finished",
+  DUPLICATE = "duplicate",
+  SECRETS = "secrets",
+  TERRAFORM = "terraform",
+  TF = "tf",
+  SERVERLESS = "serverless",
+  SLS = "sls",
+  ETH = "eth",
+  NEXT = "next",
+}
+
 export const main = async (argv: string[]) => {
-  if (argv.length < 3) error("Enter a valid gobble command");
+  if (argv.length < 2) error("Enter a valid gobble command");
 
   const leadCommand = argv[2];
   const subCommand = argv[3];
-  if (leadCommand === "dev") {
-    // todo: retire this function and move to templates package.json
-    scripts.dev();
-  } else if (leadCommand === "finished") {
-    await scripts.finished(subCommand);
-  } else if (leadCommand === "duplicate") {
-    await scripts.duplicate(subCommand, argv[4]);
-  } else if (leadCommand === "secrets") {
-    await scripts.secrets(subCommand);
-  } else if (leadCommand === "terraform" || leadCommand === "tf") {
-    // todo: retire this function and move to templates package.json
-    terraform.run(subCommand);
-  } else if (leadCommand === "serverless" || leadCommand === "sls") {
-    // todo: retire this function and move to templates package.json
-    serverless.run(subCommand);
-  } else if (leadCommand === "eth") {
-    // todo: retire this function and move to templates package.json
-    ethereum.run(subCommand);
-  } else if (leadCommand === "next") {
-    // todo: retire this function and move to templates package.json
-    next.run(subCommand);
+  switch (leadCommand) {
+    case LeadCommand.DEV:
+      scripts.dev(); // todo: retire this function and move to templates package.json
+      break;
+    case LeadCommand.FINISHED:
+      if (argv.length < 3) error("Enter a valid wrapperjs config to destroy");
+      await scripts.finished(subCommand);
+      break;
+    case LeadCommand.DUPLICATE:
+      if (argv.length < 3) error("Enter a valid wrapperjs config to duplicate");
+      await scripts.duplicate(subCommand, argv[4]);
+      break;
+    case LeadCommand.SECRETS:
+      if (argv.length < 3) error("Enter valid wrapperjs secrets to retrieve");
+      await scripts.secrets(subCommand);
+      break;
+    case LeadCommand.TERRAFORM:
+    case LeadCommand.TF:
+      if (argv.length < 3) error("Enter valid terraform command");
+      terraform.run(subCommand);
+      break;
+    case LeadCommand.SERVERLESS:
+    case LeadCommand.SLS:
+      if (argv.length < 3) error("Enter valid serverless command");
+      serverless.run(subCommand); // todo: retire this function and move to templates package.json
+      break;
+    case LeadCommand.ETH:
+      if (argv.length < 3) error("Enter valid ethereum command");
+      ethereum.run(subCommand); // todo: retire this function and move to templates package.json
+      break;
+    case LeadCommand.NEXT:
+      if (argv.length < 3) error("Enter valid next command");
+      next.run(subCommand); // todo: retire this function and move to templates package.json
+      break;
+    default:
+      error("Command not recognised, please try again");
   }
 };

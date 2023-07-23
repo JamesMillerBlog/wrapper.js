@@ -20,7 +20,7 @@ export class Template implements TemplateInterface {
 
   setupConfig = async () => {
     this.config = await this.requestConfiguration();
-    this.createSecrets(this.config);
+    this.secrets = this.createSecrets(this.config);
   };
 
   createSecrets = (

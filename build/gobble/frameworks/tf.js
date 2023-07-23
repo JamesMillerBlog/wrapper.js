@@ -28,15 +28,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.destroy = exports.apply = exports.plan = exports.init = exports.generateEnv = exports.run = exports.name = void 0;
 /* eslint-disable camelcase */
+const console_1 = require("console");
 const utils = __importStar(require("../utils.js"));
 const fs_1 = __importDefault(require("fs"));
 exports.name = "tf";
 const run = (command) => {
     if (!fs_1.default.existsSync("./devops/terraform")) {
-        throw new Error("A Terraform directory does not exist on your project.");
+        utils.error("A Terraform directory does not exist on your project.");
     }
     const tfVarsLocation = "./devops/terraform/terraform.tfvars.json";
     const envVars = JSON.parse(fs_1.default.readFileSync(tfVarsLocation, "utf8"));
+    if (!envVars) {
+        utils.error("Terraform env variables do not exist, please run 'gobble secrets {YOUR-SECRET-NAME} to generate this file");
+    }
     if (command === "init")
         (0, exports.init)(envVars);
     else if (command === "plan")
@@ -53,11 +57,12 @@ const prepData = (deploymentData) => {
 };
 const generateEnv = (deploymentData) => {
     try {
-        fs_1.default.writeFileSync("./devops/terraform/terraform.tfvars.json", prepData(deploymentData));
+        const formattedData = prepData(deploymentData);
+        fs_1.default.writeFileSync("./devops/terraform/terraform.tfvars.json", formattedData);
         console.log("Created Terraform ENV file");
     }
     catch (err) {
-        console.log(err);
+        (0, console_1.error)(err);
     }
 };
 exports.generateEnv = generateEnv;

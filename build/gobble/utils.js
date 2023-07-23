@@ -23,23 +23,20 @@ const runSyncTerminalCommand = (terminalCommand) => {
     console.log(terminalCommand);
     if (command.err)
         (0, exports.error)(`Sync Err ${command.err}`);
-    else if (command.stderr)
-        (0, exports.error)(`Sync stderr: ${command.stderr}`);
 };
 exports.runSyncTerminalCommand = runSyncTerminalCommand;
 const runAsyncTerminalCommand = (terminalCommand) => __awaiter(void 0, void 0, void 0, function* () {
-    const command = node_cmd_1.default.run(terminalCommand, function (err, data, stderr) {
+    const command = node_cmd_1.default.run(terminalCommand, function (err) {
         console.log("Started running a command");
         if (err)
-            (0, exports.error)(err);
-        if (stderr)
-            (0, exports.error)(stderr);
+            (0, exports.error)(`${err}`);
     });
     command.stdout.on("data", function (data) {
         if (data)
             console.log(data);
     });
-    command.stdout.on("close", function (data) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    command.stdout.on("close", function (_data) {
         console.log("Finished running command");
     });
 });
@@ -48,7 +45,7 @@ const initialConfigPrep = (deploymentData, framework) => {
     const data = {};
     for (const property in deploymentData) {
         if (property.includes(framework)) {
-            const newKey = property.replace(`${framework}_`, "");
+            const newKey = property.replace(/tf_|sls_|eth_|next_/gi, "");
             data[newKey] = deploymentData[property];
         }
     }
@@ -70,7 +67,7 @@ const getSecrets = (secretName) => __awaiter(void 0, void 0, void 0, function* (
         }
     }
     catch (err) {
-        (0, exports.error)(JSON.stringify(err));
+        throw new Error(String(err));
     }
 });
 exports.getSecrets = getSecrets;

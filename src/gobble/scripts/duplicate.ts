@@ -1,10 +1,9 @@
 import * as utils from "../utils";
 
 export default async (
-  secret: string | undefined,
+  secret: string,
   duplicate: string | undefined = undefined
 ) => {
-  if (secret === undefined) utils.error(`Provide a secret to duplicate.`);
   const secretExists = await utils.secretExists(secret);
   if (!secretExists) utils.error(`secret ${secret} does not exist`);
 

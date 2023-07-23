@@ -62,7 +62,6 @@ const templateQuestion = async (
   };
   if (choices.includes(options.template)) return options.template;
 
-  console.log("Template does not exist, please choose from one of the below.");
   const { template } = await inquirer.prompt(prompt);
   return String(template);
 };

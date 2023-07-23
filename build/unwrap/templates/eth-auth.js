@@ -21,7 +21,7 @@ class Template {
         this.name = Template.templateName;
         this.setupConfig = () => __awaiter(this, void 0, void 0, function* () {
             this.config = yield this.requestConfiguration();
-            this.createSecrets(this.config);
+            this.secrets = this.createSecrets(this.config);
         });
         this.createSecrets = (config) => {
             const { stage, region, root_domain_name, domain_name, s3_bucket, s3_key, configuration_name, network, network_api_url, account_address, } = config;

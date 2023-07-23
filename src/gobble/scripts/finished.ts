@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import * as utils from "../utils";
 
-export default async (secret: string | undefined) => {
+export default async (secret: string) => {
   if (secret === undefined) utils.error("Provide secret to finish");
   const secretExists = await utils.secretExists(secret);
   if (!secretExists) utils.error(`secret ${secret} does not exist`);

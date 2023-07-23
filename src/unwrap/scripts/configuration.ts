@@ -29,7 +29,7 @@ export const configureTemplate = async (options: {
 
   const temp = retrieveTemplate(name);
   const template = new temp!(secretsRequired);
-  if (secretsRequired) template.setupConfig();
+  if (secretsRequired) await template.setupConfig();
   return template;
 };
 

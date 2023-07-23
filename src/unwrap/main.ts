@@ -14,17 +14,17 @@ export const main = async (argv: string[]) => {
   const config = await selectTemplate(argv);
   const template = await configureTemplate(config);
   const location = await setupTargetDir(template);
-  const enabled = shouldGenerateResources(template);
+  const userWantsResourcesGenerated = shouldGenerateResources(template);
   const tasks = new Listr([
     {
       title: "Create secrets",
-      task: async () => await createSecrets(template.config),
-      enabled: () => enabled,
+      task: async () => await createSecrets(template),
+      enabled: () => userWantsResourcesGenerated,
     },
     {
       title: "Create Terraform State S3 Bucket",
-      task: async () => await createS3Bucket(template.config),
-      enabled: () => enabled,
+      task: async () => await createS3Bucket(template),
+      enabled: () => userWantsResourcesGenerated,
     },
     {
       title: "Copy project files",

@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import { error } from "console";
 import * as utils from "../utils.js";
 import fs from "fs";
 
@@ -6,31 +7,33 @@ export const name = "tf";
 
 export const run = (command: string) => {
   if (!fs.existsSync("./devops/terraform")) {
-    throw new Error("A Terraform directory does not exist on your project.");
+    utils.error("A Terraform directory does not exist on your project.");
   }
   const tfVarsLocation = "./devops/terraform/terraform.tfvars.json";
   const envVars = JSON.parse(fs.readFileSync(tfVarsLocation, "utf8"));
+  if (!envVars) {
+    utils.error(
+      "Terraform env variables do not exist, please run 'gobble secrets {YOUR-SECRET-NAME} to generate this file"
+    );
+  }
   if (command === "init") init(envVars);
   else if (command === "plan") plan();
   else if (command === "apply") apply();
   else if (command === "destroy") destroy(envVars);
 };
 
-const prepData = (deploymentData: { [x: string]: any }) => {
+const prepData = (deploymentData: any) => {
   const data = utils.initialConfigPrep(deploymentData, name);
-
   return JSON.stringify(data, null, 2);
 };
 
 export const generateEnv = (deploymentData: any) => {
   try {
-    fs.writeFileSync(
-      "./devops/terraform/terraform.tfvars.json",
-      prepData(deploymentData)
-    );
+    const formattedData = prepData(deploymentData);
+    fs.writeFileSync("./devops/terraform/terraform.tfvars.json", formattedData);
     console.log("Created Terraform ENV file");
   } catch (err) {
-    console.log(err);
+    error(err);
   }
 };
 

@@ -1,10 +1,6 @@
 import { validate, validateNotJMB } from "./utils";
 
 describe("utils", () => {
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
-
   describe("validate", () => {
     it("should return false if parameter is empty", async () => {
       const res = validate("");

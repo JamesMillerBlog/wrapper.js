@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.configureTemplate = exports.cliGenerateSecretsPrompt = void 0;
+exports.retrieveTemplate = exports.configureTemplate = exports.cliGenerateSecretsPrompt = void 0;
 const inquirer_1 = __importDefault(require("inquirer"));
 const templates_1 = require("../templates");
 const utils_1 = require("../utils");
@@ -34,20 +34,18 @@ const configureTemplate = (options) => __awaiter(void 0, void 0, void 0, functio
     const secretsChoice = yield (0, exports.cliGenerateSecretsPrompt)();
     const secretsRequired = secretsChoice.includes("Yes");
     const name = options.template;
-    const t = retrieveTemplate(name);
-    const template = new t(secretsRequired);
+    const temp = (0, exports.retrieveTemplate)(name);
+    const template = new temp(secretsRequired);
     if (secretsRequired)
-        template.setupConfig();
+        yield template.setupConfig();
     return template;
 });
 exports.configureTemplate = configureTemplate;
 const retrieveTemplate = (name) => {
     for (const template of Object.values(templates_1.templates)) {
-        console.log("HIA");
-        console.log(name);
-        console.log(template.templateName);
         if (name === template.templateName)
             return template;
     }
     (0, utils_1.error)(`Template ${name} does not exist`);
 };
+exports.retrieveTemplate = retrieveTemplate;

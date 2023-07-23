@@ -16,11 +16,13 @@ exports.shouldGenerateResources = exports.createS3Bucket = exports.createSecrets
 /* eslint-disable camelcase */
 const node_cmd_1 = __importDefault(require("node-cmd"));
 const utils_1 = require("../utils");
-const createSecrets = (config) => __awaiter(void 0, void 0, void 0, function* () {
-    const configuration_name = config === null || config === void 0 ? void 0 : config.configuration_name;
-    if (!config || !configuration_name)
+const createSecrets = (template) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const configuration_name = (_a = template.config) === null || _a === void 0 ? void 0 : _a.configuration_name;
+    if (!template.config || !configuration_name) {
         (0, utils_1.error)("Config needed to create secrets");
-    const stringifiedJson = JSON.stringify(JSON.stringify(config));
+    }
+    const stringifiedJson = JSON.stringify(JSON.stringify(template.secrets));
     const cmdString = `aws secretsmanager create-secret --name ${configuration_name} --secret-string ${stringifiedJson}`;
     const command = node_cmd_1.default.runSync(cmdString);
     if (command.err)
@@ -29,9 +31,10 @@ const createSecrets = (config) => __awaiter(void 0, void 0, void 0, function* ()
         (0, utils_1.error)(`Sync stdrr ${command.stderr}`);
 });
 exports.createSecrets = createSecrets;
-const createS3Bucket = (config) => __awaiter(void 0, void 0, void 0, function* () {
-    const s3_bucket = config === null || config === void 0 ? void 0 : config.s3_bucket;
-    const region = config === null || config === void 0 ? void 0 : config.region;
+const createS3Bucket = (template) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b, _c;
+    const s3_bucket = (_b = template.config) === null || _b === void 0 ? void 0 : _b.s3_bucket;
+    const region = (_c = template.config) === null || _c === void 0 ? void 0 : _c.region;
     if (!s3_bucket || !region)
         (0, utils_1.error)("Config needed to create S3 Bucket");
     const cmdStr = `aws s3api create-bucket --bucket ${s3_bucket} --region ${region} --create-bucket-configuration LocationConstraint=${region}`;

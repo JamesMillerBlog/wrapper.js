@@ -20,17 +20,17 @@ const main = (argv) => __awaiter(void 0, void 0, void 0, function* () {
     const config = yield (0, scripts_1.selectTemplate)(argv);
     const template = yield (0, scripts_1.configureTemplate)(config);
     const location = yield (0, scripts_1.setupTargetDir)(template);
-    const enabled = (0, scripts_1.shouldGenerateResources)(template);
+    const userWantsResourcesGenerated = (0, scripts_1.shouldGenerateResources)(template);
     const tasks = new listr_1.default([
         {
             title: "Create secrets",
-            task: () => __awaiter(void 0, void 0, void 0, function* () { return yield (0, scripts_1.createSecrets)(template.config); }),
-            enabled: () => enabled,
+            task: () => __awaiter(void 0, void 0, void 0, function* () { return yield (0, scripts_1.createSecrets)(template); }),
+            enabled: () => userWantsResourcesGenerated,
         },
         {
             title: "Create Terraform State S3 Bucket",
-            task: () => __awaiter(void 0, void 0, void 0, function* () { return yield (0, scripts_1.createS3Bucket)(template.config); }),
-            enabled: () => enabled,
+            task: () => __awaiter(void 0, void 0, void 0, function* () { return yield (0, scripts_1.createS3Bucket)(template); }),
+            enabled: () => userWantsResourcesGenerated,
         },
         {
             title: "Copy project files",

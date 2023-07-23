@@ -34,8 +34,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils = __importStar(require("../utils"));
 exports.default = (secret, duplicate = undefined) => __awaiter(void 0, void 0, void 0, function* () {
-    if (secret === undefined)
-        utils.error(`Provide a secret to duplicate.`);
     const secretExists = yield utils.secretExists(secret);
     if (!secretExists)
         utils.error(`secret ${secret} does not exist`);
