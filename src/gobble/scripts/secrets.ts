@@ -9,11 +9,7 @@ export default async (secret: string) => {
     utils.error(`secret ${secret} does not exist`);
   }
   try {
-    console.log("ATTEMPTING");
-    console.log(secret);
     const secrets = await utils.getSecrets(secret);
-    console.log("GOT IT");
-    console.log(secrets);
     terraform.generateEnv(secrets);
 
     const serviceName = secrets.tf_sls_service_name
